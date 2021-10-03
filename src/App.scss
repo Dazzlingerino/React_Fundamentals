@@ -1,0 +1,49 @@
+@import '~antd/dist/antd.css';
+
+.App {
+  justify-self: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.ant-col-16 {
+  max-width: 100%;
+}
+
+.ant-input, .ant-input-number {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+h3.ant-typography {
+  display: flex;
+  justify-content: center;
+}
+
+.ant-form-item-explain.ant-form-item-explain-error {
+  margin: -15px 0 5px;
+}
+
+.ant-alert-warning {
+  display: flex;
+  justify-content: center;
+
+  .ant-alert-content {
+    flex: none;
+  }
+}
+
+.ant-list-split .ant-list-item {
+  padding: 0;
+  border-bottom: none;
+}
+
+.ant-form-item {
+  align-self: normal;
+  margin-bottom: 0;
+}
+
+.ant-card-body {
+  padding: 0;
+}
