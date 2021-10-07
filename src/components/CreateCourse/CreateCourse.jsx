@@ -1,8 +1,12 @@
+import React from 'react';
+
 import { Button, Form, Input, message, Typography } from 'antd';
-import './CreateCourse.scss';
+import moment from 'moment';
+
 import Authors from './Authors/Authors';
 import Duration from './Duration/Duration';
-import moment from 'moment';
+
+import './CreateCourse.module.scss';
 
 const { TextArea } = Input;
 

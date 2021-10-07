@@ -1,7 +1,10 @@
+import React, { useEffect, useRef, useState } from 'react';
+
 import { Alert, Button, Form, Input, List, Typography } from 'antd';
-import './Authors.scss';
-import { useEffect, useRef, useState } from 'react';
+
 import { removeItem, setItemToLocalStorage } from '../../../utils/utils';
+
+import './Authors.module.scss';
 
 const { Title } = Typography;
 

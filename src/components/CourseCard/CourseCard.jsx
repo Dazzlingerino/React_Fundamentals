@@ -1,6 +1,10 @@
+import React from 'react';
+
 import { Button, Typography } from 'antd';
-import './CourseCard.scss';
+
 import CourseInfo from '../CourseInfo/CourseInfo';
+
+import './CourseCard.module.scss';
 
 const { Title, Text } = Typography;
 

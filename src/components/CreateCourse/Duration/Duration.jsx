@@ -1,7 +1,10 @@
-import { InputNumber, Typography, Form } from 'antd';
+import React, { useState } from 'react';
+
+import { Form, InputNumber, Typography } from 'antd';
+
 import { getTimeFromMin } from '../../../utils/utils';
-import { useState } from 'react';
-import './Duration.scss';
+
+import './Duration.module.scss';
 
 const { Title } = Typography;
 

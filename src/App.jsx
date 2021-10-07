@@ -1,14 +1,18 @@
-import './App.scss';
-import Courses from './components/Courses/Courses';
+import React from 'react';
+
 import {
 	BrowserRouter as Router,
 	Redirect,
 	Route,
 	Switch,
 } from 'react-router-dom';
+
+import Courses from './components/Courses/Courses';
 import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 import useToken from './utils/customHooks/useToken';
+
+import './App.scss';
 
 function App() {
 	const { token, setToken } = useToken();

@@ -1,5 +1,7 @@
+import React, { useEffect } from 'react';
+
 import { Button, Form, Input, message, Typography } from 'antd';
-import { useEffect } from 'react';
+
 import { registrationApi } from '../../api/registrationApi';
 
 const { Title } = Typography;

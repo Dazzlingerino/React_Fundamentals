@@ -1,5 +1,8 @@
+import React from 'react';
+
 import { Typography } from 'antd';
 import moment from 'moment';
+
 import { getTimeFromMin } from '../../../utils/utils';
 
 function CourseInfo({ authors, duration, creationDate }) {

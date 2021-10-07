@@ -1,6 +1,10 @@
+import React from 'react';
+
 import { Button, PageHeader, Typography } from 'antd';
-import './Header.scss';
+
 import { authApi } from '../../api/authApi';
+
+import './Header.module.scss';
 
 function Header() {
 	const handleLogout = async () => {

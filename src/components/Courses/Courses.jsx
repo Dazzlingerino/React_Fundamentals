@@ -1,18 +1,21 @@
-import Search from '../Search/Search';
-import CourseCard from '../CourseCard/CourseCard';
-import CreateCourse from '../CreateCourse/CreateCourse';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { Button } from 'antd';
+
 import {
 	mockedAuthorsList,
 	mockedCoursesList,
 } from '../../constants/constants';
-import { Button } from 'antd';
-import './Courses.scss';
 import {
 	getItemFromLocalStorage,
 	setItemToLocalStorage,
 } from '../../utils/utils';
+import CourseCard from '../CourseCard/CourseCard';
+import CreateCourse from '../CreateCourse/CreateCourse';
 import Header from '../Header/Header';
+import Search from '../Search/Search';
+
+import './Courses.module.scss';
 
 function Courses() {
 	const courses = getItemFromLocalStorage('courses');
@@ -28,7 +31,8 @@ function Courses() {
 	);
 
 	const handleSearch = (text) => {
-		const lowerCaseText = text.toLowerCase();
+		const textForSearch = text ? text : '';
+		const lowerCaseText = textForSearch.toLowerCase();
 		const filteredArray = coursesList.filter(
 			({ title, id }) =>
 				title.toLowerCase().includes(lowerCaseText) ||

@@ -27,7 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prepare": "husky install",
-    "prepublish": "npm run eslint:fix && npm run test"
+    "prepublish": "npm run eslint:fix"
   },
   "eslintConfig": {
     "extends": [

@@ -1,6 +1,9 @@
+import React from 'react';
+
 import { Button, Form, Input, Typography } from 'antd';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
+
 import { authApi } from '../../api/authApi';
 
 const { Title } = Typography;

@@ -1,6 +1,8 @@
+import React, { useEffect, useState } from 'react';
+
 import { Button, Input } from 'antd';
-import './Search.scss';
-import { useEffect, useState } from 'react';
+
+import './Search.module.scss';
 
 function Search({ handleSearch }) {
 	const [text, setText] = useState();

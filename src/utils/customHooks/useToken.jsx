@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { LocalStorage } from '../localStorage';
 
 export default function useToken() {
