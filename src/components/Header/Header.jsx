@@ -1,7 +1,11 @@
 import { Button, PageHeader, Typography } from 'antd';
 import './Header.scss';
+import { authApi } from '../../api/authApi';
 
 function Header() {
+	const handleLogout = async () => {
+		await authApi.logout();
+	};
 	return (
 		<div className='Header'>
 			<PageHeader
@@ -13,7 +17,9 @@ function Header() {
 				extra={
 					<>
 						<Typography>User's Name</Typography>
-						<Button type='inherit'>Log Out</Button>
+						<Button type='inherit' onClick={handleLogout}>
+							Log Out
+						</Button>
 					</>
 				}
 			/>

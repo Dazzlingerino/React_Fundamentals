@@ -12,6 +12,7 @@ import {
 	getItemFromLocalStorage,
 	setItemToLocalStorage,
 } from '../../utils/utils';
+import Header from '../Header/Header';
 
 function Courses() {
 	const courses = getItemFromLocalStorage('courses');
@@ -48,6 +49,7 @@ function Courses() {
 
 	return (
 		<>
+			<Header />
 			{isNewCourse ? (
 				<CreateCourse
 					passChildData={setAuthorsList}

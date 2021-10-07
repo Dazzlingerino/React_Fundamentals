@@ -1,6 +1,6 @@
 import { Button, Typography } from 'antd';
 import './CourseCard.scss';
-import CourseInfo from './CourseInfo/CourseInfo';
+import CourseInfo from '../CourseInfo/CourseInfo';
 
 const { Title, Text } = Typography;
 

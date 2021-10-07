@@ -13,7 +13,6 @@
 
 .ant-input, .ant-input-number {
   width: 100%;
-  margin-bottom: 20px;
 }
 
 h3.ant-typography {
@@ -46,4 +45,41 @@ h3.ant-typography {
 
 .ant-card-body {
   padding: 0;
+}
+
+.ant-form-horizontal .ant-form-item-control {
+  flex: 1 1;
+  align-self: center;
+  width: 250px;
+}
+
+.ant-form-item-control-input-content {
+  display: flex;
+  width: 250px;
+  justify-content: center;
+}
+
+.ant-col-offset-8 {
+  margin-top: 10px;
+  margin-left: 0;
+}
+
+.login, .registration {
+  display: flex;
+  height: 700px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .ant-form-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: normal;
+    margin-bottom: 10px;
+  }
+
+  .ant-form-item-explain.ant-form-item-explain-error {
+    margin: 0;
+  }
 }
