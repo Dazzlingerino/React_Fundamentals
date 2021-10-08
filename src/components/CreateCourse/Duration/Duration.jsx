@@ -1,39 +1,46 @@
 import React, { useState } from 'react';
 
-import { Form, InputNumber, Typography } from 'antd';
+import { Form, Typography } from 'antd';
 
 import { getTimeFromMin } from '../../../utils/utils';
-
-import './Duration.module.scss';
+import { DurationBody } from './Duration.styled';
 
 const { Title } = Typography;
 
 function Duration() {
 	const [duration, setDuration] = useState('00:00');
 
-	const inputNumberHandle = (time) => {
-		setDuration(getTimeFromMin(time));
+	const inputNumberHandle = (e) => {
+		let min = e.target.value;
+		if (min >= 24 * 60) {
+			min = 1439;
+		} else if (min < 0) {
+			min = 0;
+		}
+		setDuration(getTimeFromMin(min));
 	};
 
 	return (
-		<article className='duration c'>
+		<section className='duration c'>
 			<Title level={3}>Duration</Title>
-			<section className='duration-body'>
+			<DurationBody>
 				<Typography>Duration</Typography>
 				<Form.Item
 					name='duration'
 					rules={[
 						{
-							type: 'integer',
+							max: 4,
 							required: true,
-							pattern: new RegExp(/^[0-9]+$/),
-							message: 'Please enter course duration! (e.g. 220)',
+							message:
+								'Please enter course duration! Course duration value must be in between 0 and 1440',
 						},
 					]}
 				>
-					<InputNumber
-						min={1}
-						step={5}
+					<input
+						className='ant-input-number'
+						type='number'
+						min='0'
+						max='1440'
 						placeholder='Enter duration in minutes...'
 						onChange={inputNumberHandle}
 					/>
@@ -41,8 +48,8 @@ function Duration() {
 				<Typography className='duration-label'>
 					Duration: <b>{duration}</b> hours
 				</Typography>
-			</section>
-		</article>
+			</DurationBody>
+		</section>
 	);
 }
 

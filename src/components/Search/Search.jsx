@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Button, Input } from 'antd';
 
-import './Search.module.scss';
+import { Container } from './Search.styled';
 
 function Search({ handleSearch }) {
 	const [text, setText] = useState();
@@ -15,12 +15,12 @@ function Search({ handleSearch }) {
 	}, [text]);
 
 	return (
-		<section className='search'>
+		<Container>
 			<Input type={'text'} onChange={(e) => setText(e.target.value)} />
 			<Button type='inherit' onClick={() => handleSearch(text)}>
 				Search
 			</Button>
-		</section>
+		</Container>
 	);
 }
 

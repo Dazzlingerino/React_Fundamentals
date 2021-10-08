@@ -10,7 +10,6 @@ function Registration() {
 	const emailValidator = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/);
 	const onSubmit = (values) => {
 		registrationApi.register(values).then((res) => {
-			console.log(res);
 			if (res.status === 400) {
 				return message.error('User with this email already exists');
 			}
@@ -22,7 +21,7 @@ function Registration() {
 	};
 	useEffect(() => {}, []);
 	return (
-		<article className='registration'>
+		<div className='registration'>
 			<Title level={4}>Registration</Title>
 			<Form
 				name='registration'
@@ -74,7 +73,7 @@ function Registration() {
 				If you have an account you can
 				<a href='/login'> Login</a>
 			</div>
-		</article>
+		</div>
 	);
 }
 

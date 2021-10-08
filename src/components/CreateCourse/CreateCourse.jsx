@@ -2,11 +2,11 @@ import React from 'react';
 
 import { Button, Form, Input, message, Typography } from 'antd';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 import Authors from './Authors/Authors';
+import { Container, Title } from './CreateCourse.styled';
 import Duration from './Duration/Duration';
-
-import './CreateCourse.module.scss';
 
 const { TextArea } = Input;
 
@@ -15,6 +15,7 @@ function CreateCourse({ passChildData, authorsList, createCourseHandle }) {
 	const onFinish = (values) => {
 		const course = {
 			...values,
+			duration: +values.duration,
 			creationDate: moment().format('DD/MM/YYYY'),
 			id: new Date().getTime().toString(),
 		};
@@ -37,7 +38,7 @@ function CreateCourse({ passChildData, authorsList, createCourseHandle }) {
 			onFinishFailed={onFinishFailed}
 			autoComplete='off'
 		>
-			<section className='top-of-component'>
+			<Title>
 				<div className='input'>
 					<Typography>Title</Typography>
 					<Form.Item
@@ -55,7 +56,7 @@ function CreateCourse({ passChildData, authorsList, createCourseHandle }) {
 					</Form.Item>
 				</div>
 				<Button htmlType='submit'>Create course</Button>
-			</section>
+			</Title>
 
 			<section className='description'>
 				<Typography>Description</Typography>
@@ -66,6 +67,7 @@ function CreateCourse({ passChildData, authorsList, createCourseHandle }) {
 						{
 							type: 'string',
 							required: true,
+							min: 2,
 							message: 'Please enter course description!',
 						},
 					]}
@@ -73,17 +75,21 @@ function CreateCourse({ passChildData, authorsList, createCourseHandle }) {
 					<TextArea placeholder='Enter description' rows={4} />
 				</Form.Item>
 			</section>
-
-			<section className='body'>
+			<Container>
 				<Authors
 					passChildData={passChildData}
 					authorsList={authorsList}
 					form={form}
 				/>
 				<Duration />
-			</section>
+			</Container>
 		</Form>
 	);
 }
 
+CreateCourse.propTypes = {
+	passChildData: PropTypes.func.isRequired,
+	createCourseHandle: PropTypes.func.isRequired,
+	authorsList: PropTypes.array.isRequired,
+};
 export default CreateCourse;

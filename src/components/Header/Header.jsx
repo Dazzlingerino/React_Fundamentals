@@ -3,15 +3,14 @@ import React from 'react';
 import { Button, PageHeader, Typography } from 'antd';
 
 import { authApi } from '../../api/authApi';
-
-import './Header.module.scss';
+import { StyledHeader } from './Header.styled';
 
 function Header() {
 	const handleLogout = async () => {
 		await authApi.logout();
 	};
 	return (
-		<div className='Header'>
+		<StyledHeader>
 			<PageHeader
 				className='site-page-header'
 				avatar={{
@@ -27,7 +26,7 @@ function Header() {
 					</>
 				}
 			/>
-		</div>
+		</StyledHeader>
 	);
 }
 

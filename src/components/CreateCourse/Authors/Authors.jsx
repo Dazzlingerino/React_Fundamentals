@@ -1,20 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { Alert, Button, Form, Input, List, Typography } from 'antd';
+import PropTypes from 'prop-types';
 
 import { removeItem, setItemToLocalStorage } from '../../../utils/utils';
-
-import './Authors.module.scss';
+import { AuthorContainer, ListContainer } from './Authors.styled';
 
 const { Title } = Typography;
 
 function Authors(props) {
 	const [authorsList, setAuthorsList] = useState(props.authorsList);
 	const [courseAuthorsList, setCourseAuthorsList] = useState([]);
-	const [isDisabled, setDisabled] = useState(true);
 	const [name, setName] = useState();
+	const [isDisabled, setDisabled] = useState(true);
 	const inputEl = useRef(null);
-
+	useEffect(() => {
+		if (name && name.split('').length > 1) {
+			setDisabled(false);
+		} else {
+			setDisabled(true);
+		}
+	}, [name]);
 	const fields = props.form.getFieldsValue();
 
 	const addAuthorHandle = (author) => {
@@ -62,12 +68,11 @@ function Authors(props) {
 
 	const inputHandle = (e) => {
 		setName(e.target.value);
-		setDisabled(false);
 	};
 
 	return (
 		<>
-			<article className='add-author a'>
+			<section className='add-author a'>
 				<Title level={3}>Add author</Title>
 				<Typography className='label'>Author name</Typography>
 				<Input
@@ -77,16 +82,20 @@ function Authors(props) {
 					onChange={inputHandle}
 					value={name}
 				/>
-				<Button disabled={isDisabled} onClick={createAuthorHandle}>
+				<Button
+					disabled={isDisabled}
+					onClick={createAuthorHandle}
+					style={{ marginTop: '10px' }}
+				>
 					Create author
 				</Button>
-			</article>
-			<article className='b'>
+			</section>
+			<section className='b'>
 				<Title level={3}>Authors</Title>
 				{authorsList.length ? (
 					authorsList.map((author, index) => {
 						return (
-							<div
+							<AuthorContainer
 								key={`${author.id + index.toString()}`}
 								className='author-name-and-button'
 							>
@@ -96,7 +105,7 @@ function Authors(props) {
 										Add author
 									</Button>
 								)}
-							</div>
+							</AuthorContainer>
 						);
 					})
 				) : (
@@ -108,27 +117,44 @@ function Authors(props) {
 						style={{ cursor: 'pointer' }}
 					/>
 				)}
-			</article>
-			<article className='d'>
+			</section>
+			<section className='d'>
 				<Title level={3}>Course authors</Title>
-				<List
-					itemLayout='horizontal'
-					dataSource={courseAuthorsList}
-					locale={{ emptyText: 'Authors list is empty' }}
-					renderItem={(item) => (
-						<div className='author-name-and-button'>
-							<Form.Item name='authors'>
-								<List.Item key={item.id}>{item.name}</List.Item>
-							</Form.Item>
-							<Button onClick={() => deleteAuthorHandle(item)}>
-								Delete author
-							</Button>
-						</div>
-					)}
-				/>
-			</article>
+				<ListContainer>
+					<Form.Item
+						name='authors'
+						rules={[
+							{
+								type: 'array',
+								required: true,
+								min: 1,
+								message: 'Authors list is empty. Please add authors!',
+							},
+						]}
+					>
+						<List
+							itemLayout='horizontal'
+							dataSource={courseAuthorsList}
+							locale={{ emptyText: ' ' }}
+							renderItem={(item) => (
+								<AuthorContainer>
+									<List.Item key={item.id}>{item.name}</List.Item>
+									<Button onClick={() => deleteAuthorHandle(item)}>
+										Delete author
+									</Button>
+								</AuthorContainer>
+							)}
+						/>
+					</Form.Item>
+				</ListContainer>
+			</section>
 		</>
 	);
 }
 
+Authors.propTypes = {
+	passChildData: PropTypes.func.isRequired,
+	authorsList: PropTypes.array.isRequired,
+	form: PropTypes.object.isRequired,
+};
 export default Authors;

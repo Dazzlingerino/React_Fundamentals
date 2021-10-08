@@ -2,7 +2,7 @@
 
 .App {
   justify-self: center;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 10px;
 }
@@ -11,17 +11,9 @@
   max-width: 100%;
 }
 
-.ant-input, .ant-input-number {
-  width: 100%;
-}
-
 h3.ant-typography {
   display: flex;
   justify-content: center;
-}
-
-.ant-form-item-explain.ant-form-item-explain-error {
-  margin: -15px 0 5px;
 }
 
 .ant-alert-warning {
@@ -50,13 +42,6 @@ h3.ant-typography {
 .ant-form-horizontal .ant-form-item-control {
   flex: 1 1;
   align-self: center;
-  width: 250px;
-}
-
-.ant-form-item-control-input-content {
-  display: flex;
-  width: 250px;
-  justify-content: center;
 }
 
 .ant-col-offset-8 {

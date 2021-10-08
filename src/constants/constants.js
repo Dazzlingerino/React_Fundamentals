@@ -41,7 +41,7 @@ export const mockedAuthorsList = [
 		name: 'Vasiliy Dobkin',
 	},
 	{
-		id: 'f762978b-61eb-4096-812b-ebde22838167',
+		id: 'f762978b-61eb4096-812b-ebde22838167',
 		name: 'Nicolas Kim',
 	},
 	{
@@ -49,7 +49,7 @@ export const mockedAuthorsList = [
 		name: 'Anna Sidorenko',
 	},
 	{
-		id: '095a1817-d45b-4ed7-9cf7-b2417bcbf748',
+		id: '095a1817-d45b4ed7-9cf7-b2417bcbf748',
 		name: 'Valentina Larina',
 	},
 ];

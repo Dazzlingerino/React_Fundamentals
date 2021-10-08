@@ -26,7 +26,7 @@ function Login({ setToken }) {
 	};
 
 	return (
-		<article className='login'>
+		<div className='login'>
 			<Title level={4}>Login</Title>
 			<Form
 				name='login'
@@ -67,7 +67,7 @@ function Login({ setToken }) {
 				If you not have an account you can
 				<a href='registration'> Registration</a>
 			</div>
-		</article>
+		</div>
 	);
 }
 
