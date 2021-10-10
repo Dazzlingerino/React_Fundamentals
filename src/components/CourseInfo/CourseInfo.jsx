@@ -11,6 +11,9 @@ import {
 	ContainerBrief,
 	ContainerFull,
 	CoursesInfoContainer,
+	Description,
+	Detail,
+	FullInfo,
 } from './CourseInfo.styled';
 
 const { Title } = Typography;
@@ -24,6 +27,7 @@ const Duration = ({ duration }) => {
 };
 
 const Authors = ({ type, authors }) => {
+	const listAuthors = authors?.map((name) => <div key={name}>{name}</div>);
 	if (type === 'brief') {
 		return (
 			<Typography>
@@ -33,14 +37,14 @@ const Authors = ({ type, authors }) => {
 		);
 	}
 	if (type === 'full') {
-		return authors ? (
+		return (
 			<ContainerFull>
 				<Typography>
 					<b>Authors:</b>
-					{' ' + authors.join(', ')}
+					<div>{listAuthors}</div>
 				</Typography>
 			</ContainerFull>
-		) : null;
+		);
 	}
 };
 const CreationDate = (type, creationDate) => {
@@ -75,27 +79,36 @@ function CourseInfo(props) {
 	}
 	if (props.type === 'full')
 		return (
+			//TODO styles
 			<CoursesInfoContainer>
 				<Button type='link' href='/courses' icon={<LeftOutlined />}>
 					Back to courses
 				</Button>
-				<Title level={2}>{title ? title : 'Title'}</Title>
-				<TextTruncate
-					line={5}
-					truncateText='…'
-					text={
-						description
-							? description
-							: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi dicta esse ex, fugit iste itaque magnam minima officia quisquam reiciendis?'
-					}
-				/>
-				<CourseId id={courseId} />
-				<Duration duration={duration ? duration : 120} />
-				<CreationDate type={props.type} creationDate={creationDate} />
-				<Authors
-					type={props.type}
-					authors={authors ? authors : ['John Johnson', 'Michael Peterson']}
-				/>
+				<Title level={2} className='title'>
+					{title ? title : 'Title'}
+				</Title>
+				<FullInfo>
+					<Description>
+						<TextTruncate
+							line={5}
+							truncateText='…'
+							text={
+								description
+									? description
+									: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi dicta esse ex, fugit iste itaque magnam minima officia quisquam reiciendis?'
+							}
+						/>
+					</Description>
+					<Detail>
+						<CourseId id={courseId} />
+						<Duration duration={duration ? duration : 120} />
+						<CreationDate type={props.type} creationDate={creationDate} />
+						<Authors
+							type={props.type}
+							authors={authors ? authors : ['John Johnson', 'Michael Peterson']}
+						/>
+					</Detail>
+				</FullInfo>
 			</CoursesInfoContainer>
 		);
 }

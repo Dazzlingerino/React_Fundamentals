@@ -8,19 +8,26 @@ export const ContainerFull = styled.div`
 		display: flex;
 		flex-direction: column;
 	}
-
-	.text {
-		flex: 1;
-	}
 `;
 export const ContainerBrief = styled.div`
 	flex-direction: row;
 	overflow: hidden;
 	text-overflow: ellipsis;
+`;
 
-	.text {
-		flex: 1;
-	}
+export const Description = styled.article`
+	width: 60%;
+	padding: 0 40px 20px;
+	margin-right: 40px;
+`;
+
+export const Detail = styled.div`
+	width: 40%;
+	padding: 0 40px 20px;
+`;
+
+export const FullInfo = styled.div`
+	display: flex;
 `;
 
 export const CoursesInfoContainer = styled.div`
@@ -29,7 +36,8 @@ export const CoursesInfoContainer = styled.div`
 	flex-direction: column;
 	align-items: flex-start;
 
-	.text {
-		flex: 1;
+	.title {
+		align-self: center;
+		margin-bottom: 80px;
 	}
 `;
