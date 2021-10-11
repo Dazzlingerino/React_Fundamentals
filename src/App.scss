@@ -40,8 +40,13 @@ h3.ant-typography {
 }
 
 .ant-form-horizontal .ant-form-item-control {
-  flex: 1 1;
-  align-self: center;
+  min-width: 250px;
+  display: flex;
+
+  .ant-form-item-control-input-content {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .ant-col-offset-8 {
@@ -66,5 +71,9 @@ h3.ant-typography {
 
   .ant-form-item-explain.ant-form-item-explain-error {
     margin: 0;
+  }
+
+  .ant-form-item-explain, .ant-form-item-extra {
+    max-width: 250px;
   }
 }

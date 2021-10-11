@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { LeftOutlined } from '@ant-design/icons';
 import { Button, Typography } from 'antd';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 import TextTruncate from 'react-text-truncate';
 
-import { getTimeFromMin, truncate } from '../../utils/utils';
+import { coursesApi } from '../../api/coursesApi';
+import { getTimeFromMin } from '../../utils/utils';
 import {
-	ContainerBrief,
 	ContainerFull,
 	CoursesInfoContainer,
 	Description,
@@ -18,7 +19,41 @@ import {
 
 const { Title } = Typography;
 
-const Duration = ({ duration }) => {
+function CourseInfo({ authors, courseId }) {
+	const location = useLocation();
+	const [course, setCourse] = useState();
+	useEffect(() => {
+		const getCourseById = async () => {
+			const res = await coursesApi.getCourse(courseId);
+			setCourse(res.data.result);
+		};
+		location.pathname === `/courses/${courseId}` && getCourseById();
+	}, [courseId, location.pathname]);
+
+	return (
+		<CoursesInfoContainer>
+			<Button type='link' href='/courses' icon={<LeftOutlined />}>
+				Back to courses
+			</Button>
+			<Title level={2} className='title'>
+				{course?.title}
+			</Title>
+			<FullInfo>
+				<Description>
+					<TextTruncate line={5} truncateText='…' text={course?.description} />
+				</Description>
+				<Detail>
+					<CourseId id={courseId} />
+					<Duration duration={course?.duration} />
+					<CreationDate creationDate={course?.creationDate} />
+					<Authors authors={authors} />
+				</Detail>
+			</FullInfo>
+		</CoursesInfoContainer>
+	);
+}
+
+export const Duration = ({ duration }) => {
 	return (
 		<Typography>
 			<b>Duration:</b> {getTimeFromMin(duration)} hours
@@ -26,35 +61,28 @@ const Duration = ({ duration }) => {
 	);
 };
 
-const Authors = ({ type, authors }) => {
-	const listAuthors = authors?.map((name) => <div key={name}>{name}</div>);
-	if (type === 'brief') {
-		return (
+const Authors = ({ authors }) => {
+	const listAuthors = authors?.map((author) => (
+		<div key={author.id}>{author.name}</div>
+	));
+
+	return (
+		<ContainerFull>
 			<Typography>
 				<b>Authors:</b>
-				{truncate(' ' + authors.join(', '))}
+				<div>{listAuthors}</div>
 			</Typography>
-		);
-	}
-	if (type === 'full') {
-		return (
-			<ContainerFull>
-				<Typography>
-					<b>Authors:</b>
-					<div>{listAuthors}</div>
-				</Typography>
-			</ContainerFull>
-		);
-	}
+		</ContainerFull>
+	);
 };
-const CreationDate = (type, creationDate) => {
+export const CreationDate = ({ creationDate }) => {
 	return (
 		<Typography>
 			<b>Created:</b> {moment(creationDate).format('MM.DD.YYYY')}
 		</Typography>
 	);
 };
-const CourseId = ({ id }) => {
+export const CourseId = ({ id }) => {
 	return (
 		<Typography>
 			<b>ID: </b>
@@ -62,56 +90,6 @@ const CourseId = ({ id }) => {
 		</Typography>
 	);
 };
-
-function CourseInfo(props) {
-	const { duration, authors, creationDate, title, description, courseId } =
-		props;
-	if (props.type === 'brief') {
-		return (
-			<>
-				<ContainerBrief>
-					<Authors type={props.type} authors={authors} />
-				</ContainerBrief>
-				<Duration duration={duration} />
-				<CreationDate type={props.type} creationDate={creationDate} />
-			</>
-		);
-	}
-	if (props.type === 'full')
-		return (
-			//TODO styles
-			<CoursesInfoContainer>
-				<Button type='link' href='/courses' icon={<LeftOutlined />}>
-					Back to courses
-				</Button>
-				<Title level={2} className='title'>
-					{title ? title : 'Title'}
-				</Title>
-				<FullInfo>
-					<Description>
-						<TextTruncate
-							line={5}
-							truncateText='…'
-							text={
-								description
-									? description
-									: ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi dicta esse ex, fugit iste itaque magnam minima officia quisquam reiciendis?'
-							}
-						/>
-					</Description>
-					<Detail>
-						<CourseId id={courseId} />
-						<Duration duration={duration ? duration : 120} />
-						<CreationDate type={props.type} creationDate={creationDate} />
-						<Authors
-							type={props.type}
-							authors={authors ? authors : ['John Johnson', 'Michael Peterson']}
-						/>
-					</Detail>
-				</FullInfo>
-			</CoursesInfoContainer>
-		);
-}
 
 CourseInfo.propTypes = {
 	type: PropTypes.string.isRequired,

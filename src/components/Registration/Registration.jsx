@@ -3,11 +3,13 @@ import React, { useEffect } from 'react';
 import { Button, Form, Input, message, Typography } from 'antd';
 
 import { registrationApi } from '../../api/registrationApi';
+import { LocalStorage } from '../../utils/localStorage';
 
 const { Title } = Typography;
 
 function Registration() {
 	const emailValidator = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/);
+	const passValidator = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/);
 	const onSubmit = (values) => {
 		registrationApi.register(values).then((res) => {
 			if (res.status === 400) {
@@ -19,7 +21,9 @@ function Registration() {
 	const onSubmitFailed = (errorInfo) => {
 		console.log('Failed:', errorInfo);
 	};
-	useEffect(() => {}, []);
+	useEffect(() => {
+		LocalStorage.removeToken();
+	}, []);
 	return (
 		<div className='registration'>
 			<Title level={4}>Registration</Title>
@@ -43,6 +47,7 @@ function Registration() {
 					label='Email'
 					name='email'
 					placeholder='Enter email'
+					extra='e.g. smth@domain.com'
 					rules={[
 						{
 							required: true,
@@ -58,7 +63,14 @@ function Registration() {
 					label='Password'
 					name='password'
 					placeholder='Enter password'
-					rules={[{ required: true, message: 'Please input your password!' }]}
+					extra='Password must contain at least 8 characters, 1 letter and 1 number'
+					rules={[
+						{
+							required: true,
+							pattern: passValidator,
+							message: 'Please input your password!',
+						},
+					]}
 				>
 					<Input />
 				</Form.Item>

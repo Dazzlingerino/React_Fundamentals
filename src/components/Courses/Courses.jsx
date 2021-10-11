@@ -1,38 +1,31 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button } from 'antd';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
-import {
-	mockedAuthorsList,
-	mockedCoursesList,
-} from '../../constants/constants';
-import {
-	getItemFromLocalStorage,
-	setItemToLocalStorage,
-} from '../../utils/utils';
+import { coursesApi } from '../../api/coursesApi';
 import CourseCard from '../CourseCard/CourseCard';
-import CreateCourse from '../CreateCourse/CreateCourse';
 import Header from '../Header/Header';
 import Search from '../Search/Search';
 import { Container } from './Courses.styled';
 
-function Courses() {
-	const courses = getItemFromLocalStorage('courses');
-	const courseAuthors = getItemFromLocalStorage('courseAuthors');
-	const [isNewCourse, setNewCourse] = useState(false);
-	const [coursesList, setCoursesList] = useState(
-		courses ? courses : mockedCoursesList
-	);
-	const [filteredCourses, setFilteredCourses] = useState(coursesList);
-	//TODO fix authorsList display
-	const [authorsList, setAuthorsList] = useState(
-		courseAuthors ? mockedAuthorsList.concat(courseAuthors) : mockedAuthorsList
-	);
+function Courses({ authors }) {
+	const [courses, setCourses] = useState();
+
+	useEffect(() => {
+		const getData = async () => {
+			const coursesRes = await coursesApi.getAll();
+			setCourses(coursesRes.data.result);
+		};
+		getData().then(() => {});
+	}, []);
+
+	const [filteredCourses, setFilteredCourses] = useState(courses);
 	const handleSearch = (text) => {
 		const textForSearch = text ? text : '';
 		const lowerCaseText = textForSearch.toLowerCase();
-		const filteredArray = coursesList.filter(
+		const filteredArray = courses?.filter(
 			({ title, id }) =>
 				title.toLowerCase().includes(lowerCaseText) ||
 				id.toLowerCase().includes(lowerCaseText)
@@ -40,20 +33,13 @@ function Courses() {
 		setFilteredCourses(filteredArray);
 	};
 
-	const createCourseHandle = (newCourse) => {
-		setCoursesList((coursesList) => [...coursesList, newCourse]);
-		setNewCourse((isNewCourse) => !isNewCourse);
-		setItemToLocalStorage('courses', [...coursesList, newCourse]);
-	};
-
 	useEffect(() => {
-		setFilteredCourses(coursesList);
-	}, [coursesList]);
+		courses && setFilteredCourses(courses);
+	}, [courses]);
 
 	const history = useHistory();
 	const [, setShownCourse] = useState();
 	const [, setCourseId] = useState(0);
-	//TODO get info from server and put into courseInfo
 	const showCourseHandle = ({ course, authors }) => {
 		setCourseId(() => course.id);
 		setShownCourse({ course, authors });
@@ -63,31 +49,26 @@ function Courses() {
 	return (
 		<>
 			<Header />
-			{isNewCourse ? (
-				<CreateCourse
-					passChildData={setAuthorsList}
-					authorsList={mockedAuthorsList}
-					createCourseHandle={createCourseHandle}
-				/>
-			) : (
-				<>
-					<Container>
-						<Search handleSearch={handleSearch} />
-						<Button onClick={() => setNewCourse((isNewCourse) => !isNewCourse)}>
-							Create course
-						</Button>
-					</Container>
-					{/*TODO get info from server and put into courseInfo*/}
-					<CourseCard
-						showCourseHandle={showCourseHandle}
-						authorsList={authorsList}
-						coursesList={filteredCourses}
-						authorsFromLocalStorage={courseAuthors}
-					/>
-				</>
-			)}
+			<Container>
+				<Search handleSearch={handleSearch} />
+				<Button
+					onClick={() => {
+						history.push('/courses/add');
+					}}
+				>
+					Add New Course
+				</Button>
+			</Container>
+			<CourseCard
+				showCourseHandle={showCourseHandle}
+				authorsList={authors}
+				coursesList={filteredCourses ? filteredCourses : courses}
+			/>
 		</>
 	);
 }
 
+Courses.propTypes = {
+	authors: PropTypes.array,
+};
 export default Courses;

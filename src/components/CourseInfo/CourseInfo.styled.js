@@ -9,11 +9,6 @@ export const ContainerFull = styled.div`
 		flex-direction: column;
 	}
 `;
-export const ContainerBrief = styled.div`
-	flex-direction: row;
-	overflow: hidden;
-	text-overflow: ellipsis;
-`;
 
 export const Description = styled.article`
 	width: 60%;
@@ -28,6 +23,7 @@ export const Detail = styled.div`
 
 export const FullInfo = styled.div`
 	display: flex;
+	width: 100%;
 `;
 
 export const CoursesInfoContainer = styled.div`

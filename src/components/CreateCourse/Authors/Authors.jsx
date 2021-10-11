@@ -3,24 +3,36 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Button, Form, Input, List, Typography } from 'antd';
 import PropTypes from 'prop-types';
 
-import { removeItem, setItemToLocalStorage } from '../../../utils/utils';
+import { authorsApi } from '../../../api/authorsApi';
+import { removeItem } from '../../../utils/utils';
 import { AuthorContainer, ListContainer } from './Authors.styled';
 
 const { Title } = Typography;
 
 function Authors(props) {
-	const [authorsList, setAuthorsList] = useState(props.authorsList);
+	const [authorsList, setAuthorsList] = useState();
+
+	useEffect(() => {
+		const getData = async () => {
+			const authorsRes = await authorsApi.getAll();
+			setAuthorsList(authorsRes.data.result);
+		};
+		getData();
+	}, []);
+
 	const [courseAuthorsList, setCourseAuthorsList] = useState([]);
 	const [name, setName] = useState();
 	const [isDisabled, setDisabled] = useState(true);
 	const inputEl = useRef(null);
+
 	useEffect(() => {
-		if (name && name.split('').length > 1) {
+		if (name && name?.split('').length > 1) {
 			setDisabled(false);
 		} else {
 			setDisabled(true);
 		}
 	}, [name]);
+
 	const fields = props.form.getFieldsValue();
 
 	const addAuthorHandle = (author) => {
@@ -35,7 +47,6 @@ function Authors(props) {
 		});
 
 		setAuthorsList((authorsList) => removeItem(authorsList, id));
-		setItemToLocalStorage('courseAuthors', [...courseAuthorsList, author]);
 		setCourseAuthorsList((courseAuthorsList) => [...courseAuthorsList, author]);
 	};
 
@@ -92,8 +103,8 @@ function Authors(props) {
 			</section>
 			<section className='b'>
 				<Title level={3}>Authors</Title>
-				{authorsList.length ? (
-					authorsList.map((author, index) => {
+				{authorsList?.length ? (
+					authorsList?.map((author, index) => {
 						return (
 							<AuthorContainer
 								key={`${author.id + index.toString()}`}
