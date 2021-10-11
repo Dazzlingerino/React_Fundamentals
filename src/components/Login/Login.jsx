@@ -42,7 +42,6 @@ function Login({ setToken }) {
 					name='email'
 					placeholder='Enter email'
 					rules={[{ required: true, message: 'Please input your email!' }]}
-					initialValue='hey@epam.com'
 				>
 					<Input />
 				</Form.Item>
@@ -52,7 +51,6 @@ function Login({ setToken }) {
 					name='password'
 					placeholder='Enter password'
 					rules={[{ required: true, message: 'Please input your password!' }]}
-					initialValue='12345678'
 				>
 					<Input />
 				</Form.Item>
