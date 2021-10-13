@@ -1,15 +1,19 @@
 import styled from 'styled-components';
 
+export const ButtonGroup = styled.div`
+	display: flex;
+	justify-content: center;
+
+	button {
+		margin-left: 10px;
+	}
+`;
 export const Container = styled.div`
 	.ant-card-extra {
 		display: flex;
-
-		.courseInfo {
-			margin-left: 10vw;
-		}
 	}
 
-	.courseCard {
+	.course-card {
 		display: flex;
 		height: 200px;
 		padding: 15px;
@@ -25,7 +29,7 @@ export const Container = styled.div`
 			text-overflow: ellipsis;
 		}
 
-		.courseBriefInfo {
+		.course-brief-info {
 			display: flex;
 			flex-direction: column;
 			min-width: 300px;

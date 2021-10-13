@@ -12,7 +12,11 @@ export const coursesApi = {
 	add: async (payload) => {
 		return await axiosInstance.post(`${baseUrl}/add`, { ...payload });
 	},
+	delete: async (id) => {
+		return await axiosInstance.delete(`${baseUrl}/${id}`);
+	},
 };
+
 axiosInstance.interceptors.response.use(
 	(response) => {
 		if (response.status === 201 && response.config.url === 'courses/add') {

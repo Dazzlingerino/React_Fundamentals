@@ -2,20 +2,26 @@ import React from 'react';
 
 import { Button, Form, Input, Typography } from 'antd';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { authApi } from '../../api/authApi';
+import { login } from '../../store/user/actionCreators';
 
 const { Title } = Typography;
 
 function Login({ setToken }) {
 	const history = useHistory();
+	const dispatch = useDispatch();
+
 	const onSubmit = async (values) => {
 		try {
-			const res = await authApi.loginUser(values);
-			const token = res.data.result;
-			setToken(token);
+			const { result, user } = (await authApi.loginUser(values)).data;
+			const { email, name } = user;
+			dispatch(login({ result, email, name }));
+			setToken(result);
 			history.push('/courses');
+			debugger;
 		} catch (e) {
 			console.log(e.message);
 		}
@@ -42,6 +48,7 @@ function Login({ setToken }) {
 					name='email'
 					placeholder='Enter email'
 					rules={[{ required: true, message: 'Please input your email!' }]}
+					initialValue='hey@epam.com'
 				>
 					<Input />
 				</Form.Item>
@@ -51,6 +58,7 @@ function Login({ setToken }) {
 					name='password'
 					placeholder='Enter password'
 					rules={[{ required: true, message: 'Please input your password!' }]}
+					initialValue='12345678'
 				>
 					<Input />
 				</Form.Item>

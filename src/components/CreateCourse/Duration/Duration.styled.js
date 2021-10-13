@@ -12,7 +12,7 @@ export const DurationBody = styled.div`
 	.ant-input-number {
 		align-self: flex-start;
 		width: 100%;
-		max-width: 210px;
+		max-width: 270px;
 		padding: 4px 11px;
 	}
 

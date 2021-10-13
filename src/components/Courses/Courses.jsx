@@ -2,26 +2,31 @@ import React, { useEffect, useState } from 'react';
 
 import { Button } from 'antd';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { coursesApi } from '../../api/coursesApi';
+import { getCourses } from '../../store/courses/actionCreators';
+import { selectCourses } from '../../store/selectors/selectors';
 import CourseCard from '../CourseCard/CourseCard';
 import Header from '../Header/Header';
 import Search from '../Search/Search';
 import { Container } from './Courses.styled';
 
-function Courses({ authors }) {
-	const [courses, setCourses] = useState();
+const Courses = React.memo(({ authors }) => {
+	const dispatch = useDispatch();
+	const courses = useSelector(selectCourses);
 
 	useEffect(() => {
-		const getData = async () => {
-			const coursesRes = await coursesApi.getAll();
-			setCourses(coursesRes.data.result);
-		};
-		getData().then(() => {});
-	}, []);
+		const getData = async () => (await coursesApi.getAll()).data.result;
+		if (!courses.length) {
+			getData().then((data) => dispatch(getCourses(data)));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dispatch]);
 
 	const [filteredCourses, setFilteredCourses] = useState(courses);
+
 	const handleSearch = (text) => {
 		const textForSearch = text ? text : '';
 		const lowerCaseText = textForSearch.toLowerCase();
@@ -38,11 +43,8 @@ function Courses({ authors }) {
 	}, [courses]);
 
 	const history = useHistory();
-	const [, setShownCourse] = useState();
-	const [, setCourseId] = useState(0);
-	const showCourseHandle = ({ course, authors }) => {
-		setCourseId(() => course.id);
-		setShownCourse({ course, authors });
+
+	const showCourseHandle = (course) => {
 		history.push(`/courses/${course.id}`);
 	};
 
@@ -61,12 +63,12 @@ function Courses({ authors }) {
 			</Container>
 			<CourseCard
 				showCourseHandle={showCourseHandle}
-				authorsList={authors}
+				authors={authors}
 				coursesList={filteredCourses ? filteredCourses : courses}
 			/>
 		</>
 	);
-}
+});
 
 Courses.propTypes = {
 	authors: PropTypes.array,
