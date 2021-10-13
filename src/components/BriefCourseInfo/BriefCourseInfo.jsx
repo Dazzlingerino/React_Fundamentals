@@ -1,37 +1,28 @@
 import React from 'react';
 
-import { Typography } from 'antd';
 import PropTypes from 'prop-types';
 
-import { truncate } from '../../utils/utils';
-import { CreationDate, Duration } from '../CourseInfo/CourseInfo';
-import { ContainerBrief } from './BriefCourseInfo.styled';
+import {
+	BriefAuthors,
+	CreationDate,
+	Duration,
+} from '../../helpers/courseInfoHelpers.jsx';
 
 function BriefCourseInfo({ authors, course }) {
 	const { duration, creationDate } = course;
 	return (
 		<>
-			<ContainerBrief>
-				<Authors authors={authors} />
-			</ContainerBrief>
+			<BriefAuthors authors={authors} />
 			<Duration duration={duration} />
 			<CreationDate creationDate={creationDate} />
 		</>
 	);
 }
 
-const Authors = ({ authors }) => {
-	return (
-		<Typography>
-			<b>Authors:</b>
-			{truncate(' ' + authors.join(', '))}
-		</Typography>
-	);
-};
 BriefCourseInfo.propTypes = {
 	authors: PropTypes.array.isRequired,
 	course: PropTypes.shape({
-		creationDate: PropTypes.string.isRequired,
+		creationDate: PropTypes.string,
 		duration: PropTypes.number.isRequired,
 	}),
 };

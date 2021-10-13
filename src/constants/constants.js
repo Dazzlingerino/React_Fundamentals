@@ -53,3 +53,7 @@ export const mockedAuthorsList = [
 		name: 'Valentina Larina',
 	},
 ];
+export const emailValidator = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/);
+export const passValidator = new RegExp(
+	/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+);

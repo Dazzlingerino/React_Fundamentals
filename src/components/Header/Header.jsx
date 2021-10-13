@@ -1,14 +1,20 @@
 import React from 'react';
 
 import { Button, PageHeader, Typography } from 'antd';
+import { useDispatch } from 'react-redux';
 
 import { authApi } from '../../api/authApi';
+import { logout } from '../../store/user/actionCreators';
 import { StyledHeader } from './Header.styled';
 
 function Header() {
+	const dispatch = useDispatch();
+
 	const handleLogout = async () => {
+		dispatch(logout());
 		await authApi.logout();
 	};
+
 	return (
 		<StyledHeader>
 			<PageHeader

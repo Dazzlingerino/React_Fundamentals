@@ -9,6 +9,7 @@ export const Title = styled.div`
 		flex-direction: column;
 	}
 `;
+
 export const Container = styled.div`
 	display: grid;
 	grid-template-areas:
@@ -36,10 +37,17 @@ export const Container = styled.div`
 		.label {
 			align-self: start;
 		}
+
+		.create-author-button {
+			margin-top: 10px;
+		}
 	}
 
 	.b {
 		grid-area: top-right;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	.c {
@@ -48,5 +56,8 @@ export const Container = styled.div`
 
 	.d {
 		grid-area: bottom-right;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 `;

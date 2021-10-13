@@ -16,7 +16,7 @@ function Search({ handleSearch }) {
 
 	return (
 		<Container>
-			<Input type={'text'} onChange={(e) => setText(e.target.value)} />
+			<Input type='text' onChange={(e) => setText(e.target.value)} />
 			<Button type='inherit' onClick={() => handleSearch(text)}>
 				Search
 			</Button>

@@ -8,9 +8,13 @@ import { useLocation } from 'react-router-dom';
 import TextTruncate from 'react-text-truncate';
 
 import { coursesApi } from '../../api/coursesApi';
-import { getTimeFromMin } from '../../utils/utils';
 import {
-	ContainerFull,
+	Authors,
+	CourseId,
+	CreationDate,
+	Duration,
+} from '../../helpers/courseInfoHelpers.jsx';
+import {
 	CoursesInfoContainer,
 	Description,
 	Detail,
@@ -19,15 +23,14 @@ import {
 
 const { Title } = Typography;
 
-function CourseInfo({ authors, courseId }) {
+const CourseInfo = React.memo(({ authors, courseId }) => {
 	const location = useLocation();
 	const [course, setCourse] = useState();
 	useEffect(() => {
-		const getCourseById = async () => {
-			const res = await coursesApi.getCourse(courseId);
-			setCourse(res.data.result);
-		};
-		location.pathname === `/courses/${courseId}` && getCourseById();
+		const getCourseById = async () =>
+			(await coursesApi.getCourse(courseId)).data.result;
+		location.pathname === `/courses/${courseId}` &&
+			getCourseById().then((data) => setCourse(data));
 	}, [courseId, location.pathname]);
 
 	return (
@@ -36,66 +39,29 @@ function CourseInfo({ authors, courseId }) {
 				Back to courses
 			</Button>
 			<Title level={2} className='title'>
-				{course?.title}
+				{course?.title || 'Default Title'}
 			</Title>
 			<FullInfo>
 				<Description>
-					<TextTruncate line={5} truncateText='…' text={course?.description} />
+					<TextTruncate
+						line={5}
+						truncateText='…'
+						text={course?.description || 'Default Description'}
+					/>
 				</Description>
 				<Detail>
 					<CourseId id={courseId} />
-					<Duration duration={course?.duration} />
-					<CreationDate creationDate={course?.creationDate} />
+					<Duration duration={course?.duration || 120} />
+					<CreationDate creationDate={course?.creationDate || moment()} />
 					<Authors authors={authors} />
 				</Detail>
 			</FullInfo>
 		</CoursesInfoContainer>
 	);
-}
-
-export const Duration = ({ duration }) => {
-	return (
-		<Typography>
-			<b>Duration:</b> {getTimeFromMin(duration)} hours
-		</Typography>
-	);
-};
-
-const Authors = ({ authors }) => {
-	const listAuthors = authors?.map((author) => (
-		<div key={author.id}>{author.name}</div>
-	));
-
-	return (
-		<ContainerFull>
-			<Typography>
-				<b>Authors:</b>
-				<div>{listAuthors}</div>
-			</Typography>
-		</ContainerFull>
-	);
-};
-export const CreationDate = ({ creationDate }) => {
-	return (
-		<Typography>
-			<b>Created:</b> {moment(creationDate).format('MM.DD.YYYY')}
-		</Typography>
-	);
-};
-export const CourseId = ({ id }) => {
-	return (
-		<Typography>
-			<b>ID: </b>
-			{id}
-		</Typography>
-	);
-};
+});
 
 CourseInfo.propTypes = {
-	type: PropTypes.string.isRequired,
 	courseId: PropTypes.string,
-	duration: PropTypes.number,
-	creationDate: PropTypes.string,
 	authors: PropTypes.array,
 };
 export default CourseInfo;

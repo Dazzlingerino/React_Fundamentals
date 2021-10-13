@@ -3,13 +3,12 @@ import React, { useEffect } from 'react';
 import { Button, Form, Input, message, Typography } from 'antd';
 
 import { registrationApi } from '../../api/registrationApi';
+import { emailValidator, passValidator } from '../../constants/constants';
 import { LocalStorage } from '../../utils/localStorage';
 
 const { Title } = Typography;
 
 function Registration() {
-	const emailValidator = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/);
-	const passValidator = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/);
 	const onSubmit = (values) => {
 		registrationApi.register(values).then((res) => {
 			if (res.status === 400) {
@@ -21,9 +20,11 @@ function Registration() {
 	const onSubmitFailed = (errorInfo) => {
 		console.log('Failed:', errorInfo);
 	};
+
 	useEffect(() => {
 		LocalStorage.removeToken();
 	}, []);
+
 	return (
 		<div className='registration'>
 			<Title level={4}>Registration</Title>

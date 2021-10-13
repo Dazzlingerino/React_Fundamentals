@@ -2,7 +2,7 @@
 
 .App {
   justify-self: center;
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 10px;
 }
@@ -39,15 +39,6 @@ h3.ant-typography {
   padding: 0;
 }
 
-.ant-form-horizontal .ant-form-item-control {
-  min-width: 250px;
-  display: flex;
-
-  .ant-form-item-control-input-content {
-    display: flex;
-    justify-content: center;
-  }
-}
 
 .ant-col-offset-8 {
   margin-top: 10px;
@@ -67,6 +58,16 @@ h3.ant-typography {
     align-items: flex-start;
     align-self: normal;
     margin-bottom: 10px;
+  }
+
+  .ant-form-horizontal .ant-form-item-control {
+    min-width: 250px;
+    display: flex;
+
+    .ant-form-item-control-input-content {
+      display: flex;
+      justify-content: center;
+    }
   }
 
   .ant-form-item-explain.ant-form-item-explain-error {

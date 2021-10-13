@@ -27,6 +27,7 @@ function Duration() {
 				<Typography>Duration</Typography>
 				<Form.Item
 					name='duration'
+					initialValue=''
 					rules={[
 						{
 							max: 4,
@@ -42,7 +43,7 @@ function Duration() {
 						min='0'
 						max='1440'
 						placeholder='Enter duration in minutes...'
-						onChange={inputNumberHandle}
+						onChange={(e) => inputNumberHandle(e)}
 					/>
 				</Form.Item>
 				<Typography className='duration-label'>

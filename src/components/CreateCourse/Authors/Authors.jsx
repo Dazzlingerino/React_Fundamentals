@@ -2,28 +2,33 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { Alert, Button, Form, Input, List, Typography } from 'antd';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { authorsApi } from '../../../api/authorsApi';
+import { saveAuthor } from '../../../store/authors/actionCreators';
+import { selectAuthors } from '../../../store/selectors/selectors';
 import { removeItem } from '../../../utils/utils';
-import { AuthorContainer, ListContainer } from './Authors.styled';
+import {
+	AuthorContainer,
+	ListContainer,
+	TitleAndButton,
+} from './Authors.styled';
 
 const { Title } = Typography;
 
-function Authors(props) {
-	const [authorsList, setAuthorsList] = useState();
-
-	useEffect(() => {
-		const getData = async () => {
-			const authorsRes = await authorsApi.getAll();
-			setAuthorsList(authorsRes.data.result);
-		};
-		getData();
-	}, []);
-
+const Authors = ({ form, passChildData }) => {
+	const dispatch = useDispatch();
+	const authors = useSelector(selectAuthors);
+	const [authorsList, setAuthorsList] = useState(authors);
 	const [courseAuthorsList, setCourseAuthorsList] = useState([]);
 	const [name, setName] = useState();
 	const [isDisabled, setDisabled] = useState(true);
+
 	const inputEl = useRef(null);
+
+	useEffect(() => {
+		authorsList.length < 1 && setAuthorsList(authors);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [authors]);
 
 	useEffect(() => {
 		if (name && name?.split('').length > 1) {
@@ -33,25 +38,16 @@ function Authors(props) {
 		}
 	}, [name]);
 
-	const fields = props.form.getFieldsValue();
+	let fields = form.getFieldsValue();
 
 	const addAuthorHandle = (author) => {
 		const { id } = author;
-
-		if (fields.authors === undefined) {
-			Object.assign(fields, { authors: [] });
-		}
-
-		Object.assign(fields, {
-			authors: [id, ...fields.authors],
-		});
-
+		fields.authors?.unshift(id);
 		setAuthorsList((authorsList) => removeItem(authorsList, id));
 		setCourseAuthorsList((courseAuthorsList) => [...courseAuthorsList, author]);
 	};
 
-	const deleteAuthorHandle = (author) => {
-		const { id, name } = author;
+	const deleteAuthorHandle = ({ id, name }) => {
 		setAuthorsList((authorsList) => [...authorsList, { id, name }]);
 		setCourseAuthorsList((courseAuthorsList) =>
 			removeItem(courseAuthorsList, id)
@@ -59,23 +55,23 @@ function Authors(props) {
 	};
 
 	const createAuthorHandle = () => {
-		name &&
-			setAuthorsList((authorsList) => [
-				...authorsList,
-				{ id: new Date().getTime().toString(), name },
-			]);
+		if (name) {
+			const newAuthor = { name, id: new Date().getTime().toString() };
+			setAuthorsList((authorsList) => [...authorsList, newAuthor]);
+			dispatch(saveAuthor(newAuthor));
+		}
 		setName('');
 		setDisabled(true);
 	};
 
 	useEffect(() => {
 		fields.authors = courseAuthorsList.map((author) => author.id);
-		props.form.setFieldsValue(fields);
-	}, [props.form, fields, courseAuthorsList]);
+		form.setFieldsValue(fields);
+	}, [form, fields, courseAuthorsList]);
 
 	useEffect(() => {
-		props.passChildData(courseAuthorsList);
-	}, [courseAuthorsList, props]);
+		passChildData(courseAuthorsList);
+	}, [courseAuthorsList, passChildData]);
 
 	const inputHandle = (e) => {
 		setName(e.target.value);
@@ -94,9 +90,9 @@ function Authors(props) {
 					value={name}
 				/>
 				<Button
+					className='create-author-button'
 					disabled={isDisabled}
 					onClick={createAuthorHandle}
-					style={{ marginTop: '10px' }}
 				>
 					Create author
 				</Button>
@@ -144,16 +140,17 @@ function Authors(props) {
 						]}
 					>
 						<List
+							className='authors-list'
 							itemLayout='horizontal'
 							dataSource={courseAuthorsList}
 							locale={{ emptyText: ' ' }}
 							renderItem={(item) => (
-								<AuthorContainer>
+								<TitleAndButton>
 									<List.Item key={item.id}>{item.name}</List.Item>
 									<Button onClick={() => deleteAuthorHandle(item)}>
 										Delete author
 									</Button>
-								</AuthorContainer>
+								</TitleAndButton>
 							)}
 						/>
 					</Form.Item>
@@ -161,11 +158,10 @@ function Authors(props) {
 			</section>
 		</>
 	);
-}
+};
 
 Authors.propTypes = {
 	passChildData: PropTypes.func.isRequired,
-	authorsList: PropTypes.array.isRequired,
 	form: PropTypes.object.isRequired,
 };
 export default Authors;
