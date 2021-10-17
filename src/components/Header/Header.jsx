@@ -3,18 +3,11 @@ import React from 'react';
 import { Button, PageHeader, Typography } from 'antd';
 import { useDispatch } from 'react-redux';
 
-import { authApi } from '../../api/authApi';
-import { logout } from '../../store/user/actionCreators';
+import { logoutThunk } from '../../store/user/thunk';
 import { StyledHeader } from './Header.styled';
 
 function Header() {
 	const dispatch = useDispatch();
-
-	const handleLogout = async () => {
-		dispatch(logout());
-		await authApi.logout();
-	};
-
 	return (
 		<StyledHeader>
 			<PageHeader
@@ -26,7 +19,7 @@ function Header() {
 				extra={
 					<>
 						<Typography>User's Name</Typography>
-						<Button type='inherit' onClick={handleLogout}>
+						<Button type='inherit' onClick={() => dispatch(logoutThunk())}>
 							Log Out
 						</Button>
 					</>

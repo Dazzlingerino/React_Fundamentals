@@ -20,10 +20,14 @@ function BriefCourseInfo({ authors, course }) {
 }
 
 BriefCourseInfo.propTypes = {
-	authors: PropTypes.array.isRequired,
+	authors: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 	course: PropTypes.shape({
-		creationDate: PropTypes.string,
+		title: PropTypes.string.isRequired,
+		description: PropTypes.string.isRequired,
+		creationDate: PropTypes.string.isRequired,
 		duration: PropTypes.number.isRequired,
-	}),
+		id: PropTypes.string,
+		authors: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+	}).isRequired,
 };
 export default BriefCourseInfo;

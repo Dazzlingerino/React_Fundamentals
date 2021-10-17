@@ -7,6 +7,6 @@ export const authorsApi = {
 		return await axiosInstance.get(`${baseUrl}/all`);
 	},
 	add: async (payload) => {
-		return await axiosInstance.post(`${baseUrl}/add`, { ...payload });
+		return await axiosInstance.post(`${baseUrl}/add`, { name: payload });
 	},
 };

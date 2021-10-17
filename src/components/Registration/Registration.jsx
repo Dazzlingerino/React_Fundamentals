@@ -1,24 +1,21 @@
 import React, { useEffect } from 'react';
 
-import { Button, Form, Input, message, Typography } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
-import { registrationApi } from '../../api/registrationApi';
 import { emailValidator, passValidator } from '../../constants/constants';
+import { registrationThunk } from '../../store/user/thunk';
 import { LocalStorage } from '../../utils/localStorage';
 
 const { Title } = Typography;
 
-function Registration() {
-	const onSubmit = (values) => {
-		registrationApi.register(values).then((res) => {
-			if (res.status === 400) {
-				return message.error('User with this email already exists');
-			}
-		});
-	};
+const Registration = () => {
+	const history = useHistory();
+	const dispatch = useDispatch();
 
-	const onSubmitFailed = (errorInfo) => {
-		console.log('Failed:', errorInfo);
+	const onSubmit = (values) => {
+		dispatch(registrationThunk(values, history));
 	};
 
 	useEffect(() => {
@@ -32,7 +29,6 @@ function Registration() {
 				name='registration'
 				initialValues={{ remember: true }}
 				onFinish={onSubmit}
-				onFinishFailed={onSubmitFailed}
 				autoComplete='off'
 			>
 				<Form.Item
@@ -73,7 +69,7 @@ function Registration() {
 						},
 					]}
 				>
-					<Input />
+					<Input.Password />
 				</Form.Item>
 
 				<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -88,6 +84,5 @@ function Registration() {
 			</div>
 		</div>
 	);
-}
-
+};
 export default Registration;

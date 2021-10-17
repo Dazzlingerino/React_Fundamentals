@@ -1,19 +1,21 @@
 import React from 'react';
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Typography } from 'antd';
+import { Button, Tooltip, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import TextTruncate from 'react-text-truncate';
 
-import { coursesApi } from '../../api/coursesApi';
-import { deleteCourse } from '../../store/courses/actionCreators';
+import { deleteCourseThunk } from '../../store/courses/thunk';
 import BriefCourseInfo from '../BriefCourseInfo/BriefCourseInfo';
 import { ButtonGroup, Container } from './CourseCard.styled';
 
 const { Title } = Typography;
 
-const CourseCard = React.memo(({ authors, coursesList, showCourseHandle }) => {
+const CourseCard = ({ role, authors, coursesList, showCourseHandle }) => {
+	const history = useHistory();
+
 	const extractNames = (course) => {
 		let arrayOfAuthors;
 		arrayOfAuthors = course.authors?.map(
@@ -23,16 +25,11 @@ const CourseCard = React.memo(({ authors, coursesList, showCourseHandle }) => {
 	};
 
 	const dispatch = useDispatch();
-	const deleteCourseHandle = async (id) => {
-		dispatch(deleteCourse(id));
-		await coursesApi.delete(id);
+
+	const deleteCourseHandle = (id) => {
+		dispatch(deleteCourseThunk(id));
 	};
 
-	const editCourseHandle = (id) => {
-		console.log(
-			`You will be able to edit course with ID: ${id} in the next module`
-		);
-	};
 	return (
 		<Container>
 			{coursesList?.map((course) => {
@@ -56,16 +53,36 @@ const CourseCard = React.memo(({ authors, coursesList, showCourseHandle }) => {
 								<Button type='inherit' onClick={() => showCourseHandle(course)}>
 									Show course
 								</Button>
-								<Button
-									type='inherit'
-									icon={<EditOutlined />}
-									onClick={() => editCourseHandle(course.id)}
-								/>
-								<Button
-									danger
-									icon={<DeleteOutlined />}
-									onClick={() => deleteCourseHandle(course.id)}
-								/>
+								{role === 'admin' && (
+									<>
+										<Tooltip
+											className='ant-tooltip'
+											placement='bottom'
+											title='edit course'
+											color='#1f74f1'
+										>
+											<Button
+												type='inherit'
+												className='ant-btn-edit'
+												icon={<EditOutlined />}
+												onClick={() => {
+													history.push(`/courses/update/${course.id}`);
+												}}
+											/>
+										</Tooltip>
+										<Tooltip
+											placement='bottom'
+											title='delete course'
+											color='#ff4d4f'
+										>
+											<Button
+												danger
+												icon={<DeleteOutlined />}
+												onClick={() => deleteCourseHandle(course.id)}
+											/>
+										</Tooltip>
+									</>
+								)}
 							</ButtonGroup>
 						</div>
 					</section>
@@ -73,10 +90,33 @@ const CourseCard = React.memo(({ authors, coursesList, showCourseHandle }) => {
 			})}
 		</Container>
 	);
-});
+};
 CourseCard.propTypes = {
-	authors: PropTypes.array,
-	coursesList: PropTypes.array,
+	role: PropTypes.oneOf(['user', 'admin']),
+	authors: PropTypes.arrayOf(
+		PropTypes.shape({
+			name: PropTypes.string.isRequired,
+			id: PropTypes.string.isRequired,
+		})
+	).isRequired,
+	coursesList: PropTypes.oneOfType([
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				title: PropTypes.string.isRequired,
+				description: PropTypes.string.isRequired,
+				creationDate: PropTypes.string.isRequired,
+				duration: PropTypes.number.isRequired,
+				id: PropTypes.string.isRequired,
+				authors: PropTypes.arrayOf(
+					PropTypes.shape({
+						name: PropTypes.string.isRequired,
+						id: PropTypes.string.isRequired,
+					})
+				).isRequired,
+			})
+		).isRequired,
+		PropTypes.any,
+	]),
 	showCourseHandle: PropTypes.func.isRequired,
 };
 export default CourseCard;

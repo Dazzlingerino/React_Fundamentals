@@ -8,16 +8,22 @@ export const userInitialState = {
 };
 
 export default function userReducer(state = userInitialState, action) {
-	switch (action.type) {
+	const { type, payload } = action;
+	switch (type) {
+		case actions.SET_CURRENT_USER_ROLE:
+			return {
+				...state,
+				role: payload,
+			};
 		case actions.LOGIN:
 			return {
 				...state,
-				...action.payload,
+				...payload,
 			};
 		case actions.LOGOUT:
 			return {
 				...state,
-				...action.payload,
+				...payload,
 			};
 		default:
 			return state;

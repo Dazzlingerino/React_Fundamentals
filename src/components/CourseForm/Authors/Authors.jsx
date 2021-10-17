@@ -1,11 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Alert, Button, Form, Input, List, Typography } from 'antd';
+import { Alert, Button, Form, Input, List, message, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { saveAuthor } from '../../../store/authors/actionCreators';
-import { selectAuthors } from '../../../store/selectors/selectors';
+import {
+	addCourseAuthor,
+	deleteCourseAuthor,
+} from '../../../store/authors/actionCreators';
+import { saveAuthorThunk } from '../../../store/authors/thunk';
+import {
+	selectAuthors,
+	selectCourseAuthors,
+} from '../../../store/selectors/selectors';
 import { removeItem } from '../../../utils/utils';
 import {
 	AuthorContainer,
@@ -15,20 +22,41 @@ import {
 
 const { Title } = Typography;
 
-const Authors = ({ form, passChildData }) => {
+const Authors = React.memo(({ mode, form, courseAuthorsNames }) => {
 	const dispatch = useDispatch();
-	const authors = useSelector(selectAuthors);
-	const [authorsList, setAuthorsList] = useState(authors);
-	const [courseAuthorsList, setCourseAuthorsList] = useState([]);
 	const [name, setName] = useState();
 	const [isDisabled, setDisabled] = useState(true);
+	const authors = useSelector(selectAuthors);
+	const courseAuthors = useSelector(selectCourseAuthors);
+
+	const uniqueAuthorsList = Array.from(
+		new Set(authors.map((el) => el.name))
+	).map((name) => {
+		return {
+			name: name,
+			id: authors.find((el) => el.name === name).id,
+		};
+	});
+
+	const [authorsList, setAuthorsList] = useState(uniqueAuthorsList);
+	useEffect(() => {
+		setAuthorsList(
+			uniqueAuthorsList.filter(
+				(el) => !courseAuthors?.some((val) => el.id === val.id)
+			)
+		);
+		// eslint-disable-next-line
+	}, [authors, courseAuthors]);
+
+	const [courseAuthorsList, setCourseAuthorsList] = useState(
+		courseAuthorsNames
+			? mode === 'update'
+				? courseAuthorsNames
+				: courseAuthors
+			: []
+	);
 
 	const inputEl = useRef(null);
-
-	useEffect(() => {
-		authorsList.length < 1 && setAuthorsList(authors);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [authors]);
 
 	useEffect(() => {
 		if (name && name?.split('').length > 1) {
@@ -43,24 +71,24 @@ const Authors = ({ form, passChildData }) => {
 	const addAuthorHandle = (author) => {
 		const { id } = author;
 		fields.authors?.unshift(id);
+		dispatch(addCourseAuthor(author));
 		setAuthorsList((authorsList) => removeItem(authorsList, id));
 		setCourseAuthorsList((courseAuthorsList) => [...courseAuthorsList, author]);
 	};
 
 	const deleteAuthorHandle = ({ id, name }) => {
-		setAuthorsList((authorsList) => [...authorsList, { id, name }]);
+		dispatch(deleteCourseAuthor({ id, name }));
+		setAuthorsList((authorsList) => [...authorsList, { name, id }]);
 		setCourseAuthorsList((courseAuthorsList) =>
 			removeItem(courseAuthorsList, id)
 		);
 	};
 
 	const createAuthorHandle = () => {
-		if (name) {
-			const newAuthor = { name, id: new Date().getTime().toString() };
-			setAuthorsList((authorsList) => [...authorsList, newAuthor]);
-			dispatch(saveAuthor(newAuthor));
+		if (validate()) {
+			dispatch(saveAuthorThunk(name.trim()));
+			setName('');
 		}
-		setName('');
 		setDisabled(true);
 	};
 
@@ -69,9 +97,18 @@ const Authors = ({ form, passChildData }) => {
 		form.setFieldsValue(fields);
 	}, [form, fields, courseAuthorsList]);
 
-	useEffect(() => {
-		passChildData(courseAuthorsList);
-	}, [courseAuthorsList, passChildData]);
+	function validate() {
+		const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
+		const name = document.getElementById('name').value;
+		if (!regName.test(name)) {
+			message.error('Please enter your full name (first & last name).');
+			document.getElementById('name').focus();
+			return false;
+		} else {
+			message.success('Author created successfully');
+			return true;
+		}
+	}
 
 	const inputHandle = (e) => {
 		setName(e.target.value);
@@ -83,6 +120,7 @@ const Authors = ({ form, passChildData }) => {
 				<Title level={3}>Add author</Title>
 				<Typography className='label'>Author name</Typography>
 				<Input
+					id='name'
 					ref={inputEl}
 					className='author-input'
 					placeholder='Enter author name...'
@@ -158,10 +196,16 @@ const Authors = ({ form, passChildData }) => {
 			</section>
 		</>
 	);
-};
+});
 
 Authors.propTypes = {
-	passChildData: PropTypes.func.isRequired,
+	mode: PropTypes.oneOf(['update', 'add']),
 	form: PropTypes.object.isRequired,
+	courseAuthorsNames: PropTypes.arrayOf(
+		PropTypes.shape({
+			name: PropTypes.string.isRequired,
+			id: PropTypes.string.isRequired,
+		})
+	),
 };
 export default Authors;

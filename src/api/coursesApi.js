@@ -15,16 +15,7 @@ export const coursesApi = {
 	delete: async (id) => {
 		return await axiosInstance.delete(`${baseUrl}/${id}`);
 	},
-};
-
-axiosInstance.interceptors.response.use(
-	(response) => {
-		if (response.status === 201 && response.config.url === 'courses/add') {
-			window.location.pathname = '/courses';
-		}
-		return response;
+	update: async (id, body) => {
+		return await axiosInstance.put(`${baseUrl}/${id}`, { ...body });
 	},
-	(error) => {
-		return error.response;
-	}
-);
+};

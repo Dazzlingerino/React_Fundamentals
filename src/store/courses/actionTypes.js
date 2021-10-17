@@ -1,4 +1,9 @@
-export const SAVE_COURSE = 'courses/SAVE_COURSE';
-export const DELETE_COURSE = 'courses/DELETE_COURSE';
-export const UPDATE_COURSE = 'courses/UPDATE_COURSE';
+export const START_SAVE_COURSE = 'courses/START_SAVE_COURSE';
+export const FINISH_SAVE_COURSE = 'courses/FINISH_SAVE_COURSE';
+export const START_DELETE_COURSE = 'courses/START_DELETE_COURSE';
+export const FINISH_DELETE_COURSE = 'courses/FINISH_DELETE_COURSE';
+export const START_UPDATE_COURSE = 'courses/START_UPDATE_COURSE';
+export const FINISH_UPDATE_COURSE = 'courses/FINISH_UPDATE_COURSE';
+export const GET_COURSE = 'courses/GET_COURSE';
 export const GET_COURSES = 'courses/GET_COURSES';
+export const RESET_COURSE = 'courses/RESET_COURSE';

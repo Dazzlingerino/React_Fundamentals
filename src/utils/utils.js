@@ -21,5 +21,20 @@ export const setItemToLocalStorage = (key, value) => {
 };
 
 export function truncate(str) {
-	return str.length > 34 ? str.substring(0, 33) + '...' : str;
+	return str.length > 34 ? str.substring(0, 34) + '...' : str;
 }
+
+export const updateObjectInArray = (items, itemId, id, newObjProps) => {
+	return items.map((updated) => {
+		if (updated[id] === itemId) {
+			return { ...updated, ...newObjProps };
+		}
+		return updated;
+	});
+};
+
+export const authorsFinder = (authorsIDs, authors) => {
+	let arrayOfAuthors;
+	arrayOfAuthors = authorsIDs?.map((id) => authors?.find((a) => a.id === id));
+	return arrayOfAuthors?.filter((el) => !!el);
+};

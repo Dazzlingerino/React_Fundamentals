@@ -1,29 +1,39 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button } from 'antd';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { coursesApi } from '../../api/coursesApi';
-import { getCourses } from '../../store/courses/actionCreators';
-import { selectCourses } from '../../store/selectors/selectors';
+import { getAuthorsThunk } from '../../store/authors/thunk';
+import { getCoursesThunk } from '../../store/courses/thunk';
+import {
+	selectAuthors,
+	selectCourses,
+	selectUserRole,
+} from '../../store/selectors/selectors';
+import { getCurrentUserThunk } from '../../store/user/thunk';
 import CourseCard from '../CourseCard/CourseCard';
 import Header from '../Header/Header';
 import Search from '../Search/Search';
 import { Container } from './Courses.styled';
 
-const Courses = React.memo(({ authors }) => {
+const Courses = () => {
 	const dispatch = useDispatch();
+	const role = useSelector(selectUserRole);
 	const courses = useSelector(selectCourses);
+	const authors = useSelector(selectAuthors);
 
 	useEffect(() => {
-		const getData = async () => (await coursesApi.getAll()).data.result;
+		dispatch(getCurrentUserThunk());
+		dispatch(getAuthorsThunk());
+	}, [dispatch]);
+
+	useEffect(() => {
 		if (!courses.length) {
-			getData().then((data) => dispatch(getCourses(data)));
+			dispatch(getCoursesThunk());
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [dispatch]);
+	}, [dispatch, courses]);
 
 	const [filteredCourses, setFilteredCourses] = useState(courses);
 
@@ -47,30 +57,29 @@ const Courses = React.memo(({ authors }) => {
 	const showCourseHandle = (course) => {
 		history.push(`/courses/${course.id}`);
 	};
-
 	return (
 		<>
 			<Header />
 			<Container>
 				<Search handleSearch={handleSearch} />
-				<Button
-					onClick={() => {
-						history.push('/courses/add');
-					}}
-				>
-					Add New Course
-				</Button>
+				{role === 'admin' && (
+					<Button
+						onClick={() => {
+							history.push('/courses/add');
+						}}
+					>
+						Add New Course
+					</Button>
+				)}
 			</Container>
 			<CourseCard
+				role={role}
 				showCourseHandle={showCourseHandle}
 				authors={authors}
-				coursesList={filteredCourses ? filteredCourses : courses}
+				coursesList={filteredCourses ? filteredCourses : courses ? courses : []}
 			/>
 		</>
 	);
-});
-
-Courses.propTypes = {
-	authors: PropTypes.array,
 };
+
 export default Courses;

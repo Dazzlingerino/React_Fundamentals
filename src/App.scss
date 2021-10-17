@@ -45,12 +45,25 @@ h3.ant-typography {
   margin-left: 0;
 }
 
+.ant-tooltip-inner {
+  padding: 5px 6px 0;
+}
+
 .login, .registration {
   display: flex;
   height: 700px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  .switch-container {
+    display: flex;
+    margin: 10px;
+
+    div {
+      margin-right: 10px;
+    }
+  }
 
   .ant-form-item {
     display: flex;

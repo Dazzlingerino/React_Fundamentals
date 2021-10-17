@@ -32,6 +32,11 @@ export const CoursesInfoContainer = styled.div`
 	flex-direction: column;
 	align-items: flex-start;
 
+	.back-to-courses {
+		padding: 10px;
+		font-size: 20px;
+	}
+
 	.title {
 		align-self: center;
 		margin-bottom: 80px;

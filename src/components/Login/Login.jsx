@@ -1,46 +1,45 @@
 import React from 'react';
 
-import { Button, Form, Input, Typography } from 'antd';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Switch, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
-import { authApi } from '../../api/authApi';
-import { login } from '../../store/user/actionCreators';
+import { loginThunk } from '../../store/user/thunk';
 
 const { Title } = Typography;
 
-function Login({ setToken }) {
-	const history = useHistory();
+const Login = ({ setToken }) => {
 	const dispatch = useDispatch();
+	const [form] = Form.useForm();
 
-	const onSubmit = async (values) => {
-		try {
-			const { result, user } = (await authApi.loginUser(values)).data;
-			const { email, name } = user;
-			dispatch(login({ result, email, name }));
-			setToken(result);
-			history.push('/courses');
-			debugger;
-		} catch (e) {
-			console.log(e.message);
+	const onSubmit = (values) => {
+		dispatch(loginThunk(values, setToken));
+	};
+
+	/*safe to delete after test*/
+	const onToggle = (e) => {
+		if (e) {
+			form.setFieldsValue({
+				email: 'admin@email.com',
+				password: 'admin123',
+			});
+		} else {
+			form.resetFields();
 		}
 	};
-
-	const onSubmitFailed = (errorInfo) => {
-		console.log('Failed:', errorInfo);
-	};
+	/*safe to delete after test*/
 
 	return (
 		<div className='login'>
 			<Title level={4}>Login</Title>
 			<Form
+				form={form}
 				name='login'
 				labelCol={{ span: 12 }}
 				wrapperCol={{ span: 16 }}
 				initialValues={{ remember: true }}
 				onFinish={onSubmit}
-				onFinishFailed={onSubmitFailed}
 				autoComplete='off'
 			>
 				<Form.Item
@@ -48,7 +47,6 @@ function Login({ setToken }) {
 					name='email'
 					placeholder='Enter email'
 					rules={[{ required: true, message: 'Please input your email!' }]}
-					initialValue='hey@epam.com'
 				>
 					<Input />
 				</Form.Item>
@@ -58,9 +56,8 @@ function Login({ setToken }) {
 					name='password'
 					placeholder='Enter password'
 					rules={[{ required: true, message: 'Please input your password!' }]}
-					initialValue='12345678'
 				>
-					<Input />
+					<Input.Password />
 				</Form.Item>
 
 				<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -73,10 +70,19 @@ function Login({ setToken }) {
 				If you not have an account you can
 				<a href='registration'> Registration</a>
 			</div>
+			{/*safe to delete after test*/}
+			<div className='switch-container'>
+				<div>Set admin credentials</div>
+				<Switch
+					checkedChildren={<CheckOutlined />}
+					unCheckedChildren={<CloseOutlined />}
+					onChange={onToggle}
+				/>
+			</div>
+			{/*safe to delete after test*/}
 		</div>
 	);
-}
-
+};
 Login.propTypes = {
 	setToken: PropTypes.func.isRequired,
 };

@@ -6,6 +6,7 @@ const headers = {
 	'Content-Type': 'application/json',
 };
 const baseURL = 'http://localhost:3000/';
+
 export const axiosInstance = axios.create({
 	baseURL,
 	headers,
@@ -13,6 +14,7 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(function (config) {
 	const token = LocalStorage.getToken();
+
 	if (token) {
 		config.headers.Authorization = token;
 	}
@@ -29,8 +31,7 @@ axiosInstance.interceptors.response.use(
 		return response;
 	},
 	(error) => {
-		console.log('error', error);
-		if (error.response.status === 401) {
+		if (error.response.status === 403) {
 			LocalStorage.removeToken();
 			window.location.pathname = '/login';
 		}

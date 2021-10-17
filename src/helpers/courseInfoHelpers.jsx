@@ -27,7 +27,7 @@ export const BriefAuthors = ({ authors }) => {
 		<ContainerBrief>
 			<Typography>
 				<b>Authors:</b>
-				{truncate(' ' + authors.join(', '))}
+				{truncate(' ' + authors.map((a) => a.trim()).join(', '))}
 			</Typography>
 		</ContainerBrief>
 	);
@@ -60,21 +60,26 @@ export const Duration = ({ duration }) => {
 };
 
 Authors.propTypes = {
-	authors: PropTypes.array,
+	authors: PropTypes.arrayOf(
+		PropTypes.shape({
+			name: PropTypes.string.isRequired,
+			id: PropTypes.string.isRequired,
+		})
+	).isRequired,
 };
 
 BriefAuthors.propTypes = {
-	authors: PropTypes.array,
+	authors: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 };
 
 CreationDate.propTypes = {
-	creationDate: PropTypes.string,
+	creationDate: PropTypes.string.isRequired,
 };
 
 CourseId.propTypes = {
-	id: PropTypes.string,
+	id: PropTypes.string.isRequired,
 };
 
 Duration.propTypes = {
-	duration: PropTypes.number,
+	duration: PropTypes.number.isRequired,
 };

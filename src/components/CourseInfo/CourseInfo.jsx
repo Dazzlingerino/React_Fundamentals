@@ -1,19 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { LeftOutlined } from '@ant-design/icons';
-import { Button, Typography } from 'antd';
-import moment from 'moment';
-import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
+import { Typography } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, useParams } from 'react-router-dom';
 import TextTruncate from 'react-text-truncate';
 
-import { coursesApi } from '../../api/coursesApi';
 import {
 	Authors,
 	CourseId,
 	CreationDate,
 	Duration,
 } from '../../helpers/courseInfoHelpers.jsx';
+import { setCourseAuthors } from '../../store/authors/actionCreators';
+import { getCourseByIdThunk } from '../../store/courses/thunk';
+import {
+	selectAuthors,
+	selectCourseAuthors,
+	selectCourseAuthorsIds,
+	selectCourseById,
+} from '../../store/selectors/selectors';
+import { authorsFinder } from '../../utils/utils';
+import Header from '../Header/Header';
 import {
 	CoursesInfoContainer,
 	Description,
@@ -23,45 +31,60 @@ import {
 
 const { Title } = Typography;
 
-const CourseInfo = React.memo(({ authors, courseId }) => {
-	const location = useLocation();
-	const [course, setCourse] = useState();
+const CourseInfo = () => {
+	const dispatch = useDispatch();
+	const courseAuthors = useSelector(selectCourseAuthors);
+	const { courseId } = useParams();
+	const authorsIDs = useSelector(selectCourseAuthorsIds(courseId));
+	const authors = useSelector(selectAuthors);
+
+	const courseAuthorsNames = authorsFinder(authorsIDs, authors);
+
 	useEffect(() => {
-		const getCourseById = async () =>
-			(await coursesApi.getCourse(courseId)).data.result;
-		location.pathname === `/courses/${courseId}` &&
-			getCourseById().then((data) => setCourse(data));
-	}, [courseId, location.pathname]);
+		if (courseId) {
+			dispatch(getCourseByIdThunk(courseId));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [courseId, dispatch]);
+
+	const course = useSelector(selectCourseById);
+
+	useEffect(() => {
+		dispatch(setCourseAuthors(courseAuthorsNames));
+		//eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dispatch]);
 
 	return (
-		<CoursesInfoContainer>
-			<Button type='link' href='/courses' icon={<LeftOutlined />}>
-				Back to courses
-			</Button>
-			<Title level={2} className='title'>
-				{course?.title || 'Default Title'}
-			</Title>
-			<FullInfo>
-				<Description>
-					<TextTruncate
-						line={5}
-						truncateText='…'
-						text={course?.description || 'Default Description'}
-					/>
-				</Description>
-				<Detail>
-					<CourseId id={courseId} />
-					<Duration duration={course?.duration || 120} />
-					<CreationDate creationDate={course?.creationDate || moment()} />
-					<Authors authors={authors} />
-				</Detail>
-			</FullInfo>
-		</CoursesInfoContainer>
+		course && (
+			<>
+				<Header />
+				<CoursesInfoContainer>
+					<NavLink className='back-to-courses' to='/courses'>
+						<LeftOutlined />
+						Back to courses
+					</NavLink>
+					<Title level={2} className='title'>
+						{course.title}
+					</Title>
+					<FullInfo>
+						<Description>
+							<TextTruncate
+								line={5}
+								truncateText='…'
+								text={course.description}
+							/>
+						</Description>
+						<Detail>
+							<CourseId id={courseId} />
+							<Duration duration={course.duration} />
+							<CreationDate creationDate={course.creationDate} />
+							<Authors authors={courseAuthors} />
+						</Detail>
+					</FullInfo>
+				</CoursesInfoContainer>
+			</>
+		)
 	);
-});
-
-CourseInfo.propTypes = {
-	courseId: PropTypes.string,
-	authors: PropTypes.array,
 };
+
 export default CourseInfo;

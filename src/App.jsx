@@ -1,68 +1,68 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Redirect,
+	Route,
+	Switch,
+} from 'react-router-dom';
 
-import { authorsApi } from './api/authorsApi';
+import CourseForm from './components/CourseForm/CourseForm';
 import CourseInfo from './components/CourseInfo/CourseInfo';
 import Courses from './components/Courses/Courses';
-import CreateCourse from './components/CreateCourse/CreateCourse';
-import Header from './components/Header/Header';
+import ErrorDialog from './components/ErrorDialog/ErrorDialog';
 import Login from './components/Login/Login';
+import { PrivateRoute } from './components/PrivateRouter/PrivateRouter';
 import Registration from './components/Registration/Registration';
-import { getAuthors } from './store/authors/actionCreators';
-import { selectAuthors } from './store/selectors/selectors';
+import { clearAppError } from './store/app/actionCreators';
+import { selectAppError } from './store/selectors/selectors';
 import useToken from './utils/customHooks/useToken';
 
 import './App.scss';
 
-const App = React.memo(() => {
+const App = () => {
 	const { token, setToken } = useToken();
-	const location = useLocation();
 	const dispatch = useDispatch();
-
-	const authors = useSelector(selectAuthors);
-	const [, setAuthors] = useState();
-
-	useEffect(() => {
-		const getData = async () => (await authorsApi.getAll()).data.result;
-		getData().then((data) => dispatch(getAuthors(data)));
-	}, [dispatch, location.pathname]);
+	const appError = useSelector(selectAppError);
 
 	return (
 		<main className='App'>
-			<Switch>
-				<Route exact path='/'>
-					{<Redirect to='/login' />}
-				</Route>
-				{!token ? (
-					<Route path='/login'>
-						<Login setToken={setToken} />
+			<ErrorDialog
+				error={appError}
+				onClose={() => dispatch(clearAppError())}
+				open={!!appError}
+			/>
+			<Router>
+				<Switch>
+					<Route
+						exact
+						path='/login'
+						render={() =>
+							token ? (
+								<Redirect to={{ pathname: '/courses' }} />
+							) : (
+								<Login setToken={setToken} />
+							)
+						}
+					/>
+					<Route exact path='/registration' component={Registration} />
+					<Route exact path='/'>
+						{<Redirect to='/login' />}
 					</Route>
-				) : (
-					<Route exact path='/login'>
-						{<Redirect to='/courses' />}
+					<Route exact path='/courses' component={Courses} />
+					<Route path='/courses/add'>
+						<CourseForm mode='add' />
 					</Route>
-				)}
-				<Route exact path='/registration' component={Registration} />
-				<Route exact path='/courses'>
-					<Courses authors={authors} />
-				</Route>
-				<Route path='/courses/add'>
-					<CreateCourse passChildData={setAuthors} />
-				</Route>
-				<Route
-					path='/courses/:courseId'
-					render={({ match }) => (
-						<>
-							<Header />
-							<CourseInfo authors={authors} courseId={match.params.courseId} />
-						</>
-					)}
-				/>
-			</Switch>
+					<PrivateRoute
+						path='/courses/update/:courseId'
+						render={() => <CourseForm mode='update' />}
+					/>
+					<Route path='/courses/:courseId' render={() => <CourseInfo />} />
+				</Switch>
+			</Router>
 		</main>
 	);
-});
+};
 
 export default App;
