@@ -13,7 +13,7 @@ import CourseInfo from './components/CourseInfo/CourseInfo';
 import Courses from './components/Courses/Courses';
 import ErrorDialog from './components/ErrorDialog/ErrorDialog';
 import Login from './components/Login/Login';
-import PrivateRoutes from './components/PrivateRouter/PrivateRouter';
+import PrivateRoute from './components/PrivateRouter/PrivateRouter';
 import Registration from './components/Registration/Registration';
 import { clearAppError } from './store/app/actionCreators';
 import { selectAppError } from './store/selectors/selectors';
@@ -53,23 +53,13 @@ const App = () => {
 						{<Redirect to='/login' />}
 					</Route>
 					<Route exact path='/courses' component={Courses} />
-					<PrivateRoutes>
-						<Route
-							exact
-							path='/courses/update/:courseId'
-							render={() => <CourseForm mode='update' />}
-						/>
-						<Route
-							exact
-							path='/courses/add'
-							render={() => <CourseForm mode='add' />}
-						/>
-					</PrivateRoutes>
-					<Route
-						exact
-						path='/courses/:courseId'
-						render={() => <CourseInfo />}
-					/>
+					<PrivateRoute exact path='/courses/update/:courseId'>
+						<CourseForm mode='update' />
+					</PrivateRoute>
+					<PrivateRoute exact path='/courses/add'>
+						<CourseForm mode='add' />
+					</PrivateRoute>
+					<Route exact path='/courses/:courseId' component={CourseInfo} />
 				</Switch>
 			</Router>
 		</main>

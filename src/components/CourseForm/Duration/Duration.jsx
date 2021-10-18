@@ -8,9 +8,9 @@ import { DurationBody } from './Duration.styled';
 
 const { Title } = Typography;
 
-function Duration({ mode, initialduration }) {
+function Duration({ mode, initialDuration }) {
 	const [duration, setDuration] = useState(
-		mode === 'update' ? initialduration : '00:00'
+		mode === 'update' ? initialDuration : '00:00'
 	);
 
 	const inputNumberHandle = (e) => {
@@ -24,10 +24,10 @@ function Duration({ mode, initialduration }) {
 	};
 
 	useEffect(() => {
-		if (initialduration) {
-			setDuration(getTimeFromMin(initialduration));
+		if (initialDuration) {
+			setDuration(getTimeFromMin(initialDuration));
 		}
-	}, [initialduration]);
+	}, [initialDuration]);
 
 	return (
 		<section className='duration c'>
@@ -64,7 +64,7 @@ function Duration({ mode, initialduration }) {
 
 Duration.propsTypes = {
 	mode: PropTypes.oneOf(['update', 'add']),
-	initialduration: PropTypes.oneOfType([PropTypes.number, PropTypes.any]),
+	initialDuration: PropTypes.oneOfType([PropTypes.number, PropTypes.any]),
 };
 
 export default Duration;

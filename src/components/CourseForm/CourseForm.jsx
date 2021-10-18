@@ -76,7 +76,6 @@ const CourseForm = ({ mode }) => {
 	}, [courseAuthorsNames, dispatch, mode]);
 
 	const onAdd = (values) => {
-		console.log(history.location);
 		const course = {
 			...values,
 			duration: +values.duration,
@@ -226,7 +225,7 @@ const CourseForm = ({ mode }) => {
 								form={updateForm}
 								courseAuthorsNames={courseAuthorsNames}
 							/>
-							<Duration mode={mode} initialduration={course.duration} />
+							<Duration mode={mode} initialDuration={course.duration} />
 						</Container>
 					</Form>
 				)
