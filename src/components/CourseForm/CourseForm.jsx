@@ -76,7 +76,6 @@ const CourseForm = ({ mode }) => {
 	}, [courseAuthorsNames, dispatch, mode]);
 
 	const onAdd = (values) => {
-		console.log(history.location);
 		const course = {
 			...values,
 			duration: +values.duration,
