@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Switch, Typography } from 'antd';
@@ -10,8 +10,11 @@ import { loginThunk } from '../../store/user/thunk';
 const { Title } = Typography;
 
 const Login = ({ setToken }) => {
-	const dispatch = useDispatch();
 	const [form] = Form.useForm();
+
+	const loginRef = useRef(null);
+
+	const dispatch = useDispatch();
 
 	const onSubmit = (values) => {
 		dispatch(loginThunk(values, setToken));
@@ -20,6 +23,7 @@ const Login = ({ setToken }) => {
 	/*safe to delete after test*/
 	const onToggle = (e) => {
 		if (e) {
+			loginRef.current.focus();
 			form.setFieldsValue({
 				email: 'admin@email.com',
 				password: 'admin123',
@@ -61,7 +65,7 @@ const Login = ({ setToken }) => {
 				</Form.Item>
 
 				<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-					<Button type='default' htmlType='submit'>
+					<Button ref={loginRef} type='default' htmlType='submit'>
 						Login
 					</Button>
 				</Form.Item>
@@ -83,7 +87,9 @@ const Login = ({ setToken }) => {
 		</div>
 	);
 };
+
 Login.propTypes = {
 	setToken: PropTypes.func.isRequired,
 };
+
 export default Login;

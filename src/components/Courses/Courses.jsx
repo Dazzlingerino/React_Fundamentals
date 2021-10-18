@@ -18,24 +18,21 @@ import Search from '../Search/Search';
 import { Container } from './Courses.styled';
 
 const Courses = () => {
-	const dispatch = useDispatch();
+	const history = useHistory();
+
 	const role = useSelector(selectUserRole);
 	const courses = useSelector(selectCourses);
 	const authors = useSelector(selectAuthors);
 
+	const [filteredCourses, setFilteredCourses] = useState(courses);
+
+	const dispatch = useDispatch();
+
 	useEffect(() => {
 		dispatch(getCurrentUserThunk());
 		dispatch(getAuthorsThunk());
+		dispatch(getCoursesThunk());
 	}, [dispatch]);
-
-	useEffect(() => {
-		if (!courses.length) {
-			dispatch(getCoursesThunk());
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [dispatch, courses]);
-
-	const [filteredCourses, setFilteredCourses] = useState(courses);
 
 	const handleSearch = (text) => {
 		const textForSearch = text ? text : '';
@@ -52,11 +49,10 @@ const Courses = () => {
 		courses && setFilteredCourses(courses);
 	}, [courses]);
 
-	const history = useHistory();
-
 	const showCourseHandle = (course) => {
 		history.push(`/courses/${course.id}`);
 	};
+
 	return (
 		<>
 			<Header />

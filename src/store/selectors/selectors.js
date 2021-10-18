@@ -7,4 +7,5 @@ export const selectCourseAuthorsIds = (courseId) => (state) =>
 	state.courses.courses.find((course) => course.id === courseId)?.authors;
 
 export const selectUserRole = (state) => state.user.role;
+export const selectUserName = (state) => state.user.name;
 export const selectAppError = (state) => state.app.appError;

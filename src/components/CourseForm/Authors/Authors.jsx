@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import { Alert, Button, Form, Input, List, message, Typography } from 'antd';
+import { Alert, Button, Form, Input, List, Typography, message } from 'antd';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -13,7 +13,11 @@ import {
 	selectAuthors,
 	selectCourseAuthors,
 } from '../../../store/selectors/selectors';
-import { removeItem } from '../../../utils/utils';
+import {
+	makeUniqueAuthorsList,
+	removeItem,
+	validate,
+} from '../../../utils/utils';
 import {
 	AuthorContainer,
 	ListContainer,
@@ -22,32 +26,12 @@ import {
 
 const { Title } = Typography;
 
-const Authors = React.memo(({ mode, form, courseAuthorsNames }) => {
-	const dispatch = useDispatch();
-	const [name, setName] = useState();
-	const [isDisabled, setDisabled] = useState(true);
+const Authors = ({ mode, form, courseAuthorsNames }) => {
 	const authors = useSelector(selectAuthors);
 	const courseAuthors = useSelector(selectCourseAuthors);
 
-	const uniqueAuthorsList = Array.from(
-		new Set(authors.map((el) => el.name))
-	).map((name) => {
-		return {
-			name: name,
-			id: authors.find((el) => el.name === name).id,
-		};
-	});
-
-	const [authorsList, setAuthorsList] = useState(uniqueAuthorsList);
-	useEffect(() => {
-		setAuthorsList(
-			uniqueAuthorsList.filter(
-				(el) => !courseAuthors?.some((val) => el.id === val.id)
-			)
-		);
-		// eslint-disable-next-line
-	}, [authors, courseAuthors]);
-
+	const [name, setName] = useState();
+	const [isDisabled, setDisabled] = useState(true);
 	const [courseAuthorsList, setCourseAuthorsList] = useState(
 		courseAuthorsNames
 			? mode === 'update'
@@ -55,8 +39,25 @@ const Authors = React.memo(({ mode, form, courseAuthorsNames }) => {
 				: courseAuthors
 			: []
 	);
+	const uniqueAuthorsList = useMemo(
+		() => makeUniqueAuthorsList(authors),
+		[authors]
+	);
+	const [authorsList, setAuthorsList] = useState(uniqueAuthorsList);
+
+	let fields = form.getFieldsValue();
 
 	const inputEl = useRef(null);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		setAuthorsList(
+			uniqueAuthorsList.filter(
+				(el) => !courseAuthors?.some((val) => el.id === val.id)
+			)
+		);
+	}, [authors, courseAuthors, uniqueAuthorsList]);
 
 	useEffect(() => {
 		if (name && name?.split('').length > 1) {
@@ -66,7 +67,10 @@ const Authors = React.memo(({ mode, form, courseAuthorsNames }) => {
 		}
 	}, [name]);
 
-	let fields = form.getFieldsValue();
+	useEffect(() => {
+		fields.authors = courseAuthorsList.map((author) => author.id);
+		form.setFieldsValue(fields);
+	}, [form, fields, courseAuthorsList]);
 
 	const addAuthorHandle = (author) => {
 		const { id } = author;
@@ -85,30 +89,12 @@ const Authors = React.memo(({ mode, form, courseAuthorsNames }) => {
 	};
 
 	const createAuthorHandle = () => {
-		if (validate()) {
-			dispatch(saveAuthorThunk(name.trim()));
+		if (validate('name', message)) {
+			dispatch(saveAuthorThunk(name?.trim()));
 			setName('');
 		}
 		setDisabled(true);
 	};
-
-	useEffect(() => {
-		fields.authors = courseAuthorsList.map((author) => author.id);
-		form.setFieldsValue(fields);
-	}, [form, fields, courseAuthorsList]);
-
-	function validate() {
-		const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
-		const name = document.getElementById('name').value;
-		if (!regName.test(name)) {
-			message.error('Please enter your full name (first & last name).');
-			document.getElementById('name').focus();
-			return false;
-		} else {
-			message.success('Author created successfully');
-			return true;
-		}
-	}
 
 	const inputHandle = (e) => {
 		setName(e.target.value);
@@ -196,7 +182,7 @@ const Authors = React.memo(({ mode, form, courseAuthorsNames }) => {
 			</section>
 		</>
 	);
-});
+};
 
 Authors.propTypes = {
 	mode: PropTypes.oneOf(['update', 'add']),
@@ -208,4 +194,5 @@ Authors.propTypes = {
 		})
 	),
 };
+
 export default Authors;

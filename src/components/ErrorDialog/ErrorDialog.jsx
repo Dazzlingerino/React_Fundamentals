@@ -35,6 +35,7 @@ export default function ErrorDialog({ onClose, open, error }) {
 		</Modal>
 	);
 }
+
 ErrorDialog.propTypes = {
 	onClose: PropTypes.func.isRequired,
 	open: PropTypes.bool.isRequired,

@@ -8,9 +8,9 @@ import { DurationBody } from './Duration.styled';
 
 const { Title } = Typography;
 
-function Duration({ mode, initialValue }) {
+function Duration({ mode, initialduration }) {
 	const [duration, setDuration] = useState(
-		mode === 'update' ? initialValue : '00:00'
+		mode === 'update' ? initialduration : '00:00'
 	);
 
 	const inputNumberHandle = (e) => {
@@ -24,60 +24,36 @@ function Duration({ mode, initialValue }) {
 	};
 
 	useEffect(() => {
-		if (initialValue) {
-			setDuration(getTimeFromMin(initialValue));
+		if (initialduration) {
+			setDuration(getTimeFromMin(initialduration));
 		}
-	}, [initialValue]);
+	}, [initialduration]);
 
 	return (
 		<section className='duration c'>
 			<Title level={3}>Duration</Title>
 			<DurationBody>
 				<Typography>Duration</Typography>
-				{initialValue ? (
-					<Form.Item
-						name='duration'
-						rules={[
-							{
-								required: true,
-								message:
-									'Please enter course duration! Course duration value must be in between 0 and 1440',
-							},
-						]}
-					>
-						<input
-							className='ant-input-number'
-							type='number'
-							min='0'
-							max='1440'
-							placeholder='Enter duration in minutes...'
-							value={duration}
-							onChange={(e) => inputNumberHandle(e)}
-						/>
-					</Form.Item>
-				) : (
-					<Form.Item
-						name='duration'
-						initialValue=''
-						rules={[
-							{
-								required: true,
-								message:
-									'Please enter course duration! Course duration value must be in between 0 and 1440',
-							},
-						]}
-					>
-						<input
-							className='ant-input-number'
-							type='number'
-							min='0'
-							max='1440'
-							placeholder='Enter duration in minutes...'
-							value={initialValue}
-							onChange={(e) => inputNumberHandle(e)}
-						/>
-					</Form.Item>
-				)}
+				<Form.Item
+					name='duration'
+					rules={[
+						{
+							required: true,
+							message:
+								'Please enter course duration! Course duration value must be in between 0 and 1440',
+						},
+					]}
+				>
+					<input
+						className='ant-input-number'
+						type='number'
+						min='0'
+						max='1440'
+						placeholder='Enter duration in minutes...'
+						value={duration}
+						onChange={(e) => inputNumberHandle(e)}
+					/>
+				</Form.Item>
 				<Typography className='duration-label'>
 					Duration: <b>{duration}</b> hours
 				</Typography>
@@ -88,6 +64,7 @@ function Duration({ mode, initialValue }) {
 
 Duration.propsTypes = {
 	mode: PropTypes.oneOf(['update', 'add']),
-	initialValue: PropTypes.oneOfType([PropTypes.number, PropTypes.any]),
+	initialduration: PropTypes.oneOfType([PropTypes.number, PropTypes.any]),
 };
+
 export default Duration;

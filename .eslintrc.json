@@ -16,9 +16,31 @@
   },
   "plugins": [
     "react",
-    "prettier"
+    "prettier",
+    "hooks"
+  ],
+  "ignorePatterns": [
+    "utils.js"
   ],
   "rules": {
+    "hooks/sort": [
+      1,
+      {
+        "groups": [
+          "useHistory",
+          "useParams",
+          "useForm",
+          "useReducer",
+          "useContext",
+          "useSelector",
+          "useState",
+          "useRef",
+          "useDispatch",
+          "useCallback",
+          "useEffect"
+        ]
+      }
+    ],
     "import/order": [
       "error",
       {

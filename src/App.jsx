@@ -13,7 +13,7 @@ import CourseInfo from './components/CourseInfo/CourseInfo';
 import Courses from './components/Courses/Courses';
 import ErrorDialog from './components/ErrorDialog/ErrorDialog';
 import Login from './components/Login/Login';
-import { PrivateRoute } from './components/PrivateRouter/PrivateRouter';
+import PrivateRoutes from './components/PrivateRouter/PrivateRouter';
 import Registration from './components/Registration/Registration';
 import { clearAppError } from './store/app/actionCreators';
 import { selectAppError } from './store/selectors/selectors';
@@ -23,13 +23,15 @@ import './App.scss';
 
 const App = () => {
 	const { token, setToken } = useToken();
-	const dispatch = useDispatch();
+
 	const appError = useSelector(selectAppError);
+
+	const dispatch = useDispatch();
 
 	return (
 		<main className='App'>
 			<ErrorDialog
-				error={appError}
+				error={!!appError ? appError : ''}
 				onClose={() => dispatch(clearAppError())}
 				open={!!appError}
 			/>
@@ -51,14 +53,23 @@ const App = () => {
 						{<Redirect to='/login' />}
 					</Route>
 					<Route exact path='/courses' component={Courses} />
-					<Route path='/courses/add'>
-						<CourseForm mode='add' />
-					</Route>
-					<PrivateRoute
-						path='/courses/update/:courseId'
-						render={() => <CourseForm mode='update' />}
+					<PrivateRoutes>
+						<Route
+							exact
+							path='/courses/update/:courseId'
+							render={() => <CourseForm mode='update' />}
+						/>
+						<Route
+							exact
+							path='/courses/add'
+							render={() => <CourseForm mode='add' />}
+						/>
+					</PrivateRoutes>
+					<Route
+						exact
+						path='/courses/:courseId'
+						render={() => <CourseInfo />}
 					/>
-					<Route path='/courses/:courseId' render={() => <CourseInfo />} />
 				</Switch>
 			</Router>
 		</main>

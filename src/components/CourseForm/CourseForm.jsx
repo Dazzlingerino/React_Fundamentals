@@ -25,21 +25,22 @@ import Duration from './Duration/Duration';
 
 const { TextArea } = Input;
 
-const CourseForm = React.memo(({ mode }) => {
+const CourseForm = ({ mode }) => {
+	const history = useHistory();
+
+	const { courseId } = useParams();
+
 	const [addForm] = Form.useForm();
 	const [updateForm] = Form.useForm();
-	const dispatch = useDispatch();
-	const history = useHistory();
-	const [description, setDescription] = useState();
-	const [title, setTitle] = useState();
-	const { courseId } = useParams();
+
 	const authorsIDs = useSelector(selectCourseAuthorsIds(courseId));
 	const course = useSelector(selectCourseById);
 	const authors = useSelector(selectAuthors);
 
-	useEffect(() => {
-		dispatch(getAuthorsThunk());
-	}, [dispatch]);
+	const [description, setDescription] = useState();
+	const [title, setTitle] = useState();
+
+	const dispatch = useDispatch();
 
 	const courseAuthorsNames = authorsFinder(authorsIDs, authors);
 
@@ -49,6 +50,10 @@ const CourseForm = React.memo(({ mode }) => {
 		description: '',
 		authors: [],
 	};
+
+	useEffect(() => {
+		dispatch(getAuthorsThunk());
+	}, [dispatch]);
 
 	useEffect(() => {
 		if (courseId) {
@@ -68,10 +73,10 @@ const CourseForm = React.memo(({ mode }) => {
 		} else if (mode === 'add') {
 			dispatch(setCourseAuthors([]));
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [dispatch]);
+	}, [courseAuthorsNames, dispatch, mode]);
 
 	const onAdd = (values) => {
+		console.log(history.location);
 		const course = {
 			...values,
 			duration: +values.duration,
@@ -153,7 +158,7 @@ const CourseForm = React.memo(({ mode }) => {
 					</section>
 					<Container>
 						<Authors form={addForm} mode={mode} />
-						<Duration />
+						<Duration mode={mode} />
 					</Container>
 				</Form>
 			) : (
@@ -221,19 +226,17 @@ const CourseForm = React.memo(({ mode }) => {
 								form={updateForm}
 								courseAuthorsNames={courseAuthorsNames}
 							/>
-							<Duration
-								mode={mode}
-								form={updateForm}
-								initialValue={course.duration}
-							/>
+							<Duration mode={mode} initialduration={course.duration} />
 						</Container>
 					</Form>
 				)
 			)}
 		</>
 	);
-});
+};
+
 CourseForm.propTypes = {
 	mode: PropTypes.oneOf(['update', 'add']),
 };
+
 export default CourseForm;

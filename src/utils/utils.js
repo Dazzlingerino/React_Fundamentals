@@ -38,3 +38,24 @@ export const authorsFinder = (authorsIDs, authors) => {
 	arrayOfAuthors = authorsIDs?.map((id) => authors?.find((a) => a.id === id));
 	return arrayOfAuthors?.filter((el) => !!el);
 };
+
+export function validate(elementId, message) {
+	const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
+	const name = document.getElementById(elementId).value;
+	if (!regName.test(name)) {
+		message.error('Please enter your full name (first & last name).');
+		document.getElementById('name').focus();
+		return false;
+	} else {
+		message.success('Author created successfully');
+		return true;
+	}
+}
+
+export const makeUniqueAuthorsList = (authors) =>
+	Array.from(new Set(authors.map((el) => el.name))).map((name) => {
+		return {
+			name: name,
+			id: authors.find((el) => el.name === name).id,
+		};
+	});

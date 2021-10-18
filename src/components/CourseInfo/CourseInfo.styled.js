@@ -12,7 +12,7 @@ export const ContainerFull = styled.div`
 
 export const Description = styled.article`
 	width: 60%;
-	padding: 0 40px 20px;
+	padding: 0 40px 40px;
 	margin-right: 40px;
 `;
 

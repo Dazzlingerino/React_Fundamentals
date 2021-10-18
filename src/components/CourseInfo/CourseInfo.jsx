@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { LeftOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
-import TextTruncate from 'react-text-truncate';
 
 import {
 	Authors,
@@ -29,30 +28,32 @@ import {
 	FullInfo,
 } from './CourseInfo.styled';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const CourseInfo = () => {
-	const dispatch = useDispatch();
-	const courseAuthors = useSelector(selectCourseAuthors);
 	const { courseId } = useParams();
-	const authorsIDs = useSelector(selectCourseAuthorsIds(courseId));
-	const authors = useSelector(selectAuthors);
 
-	const courseAuthorsNames = authorsFinder(authorsIDs, authors);
+	const authors = useSelector(selectAuthors);
+	const authorsIDs = useSelector(selectCourseAuthorsIds(courseId));
+	const courseAuthors = useSelector(selectCourseAuthors);
+	const course = useSelector(selectCourseById);
+
+	const dispatch = useDispatch();
+
+	const courseAuthorsNames = useMemo(
+		() => authorsFinder(authorsIDs, authors),
+		[authorsIDs, authors]
+	);
 
 	useEffect(() => {
 		if (courseId) {
 			dispatch(getCourseByIdThunk(courseId));
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [courseId, dispatch]);
-
-	const course = useSelector(selectCourseById);
 
 	useEffect(() => {
 		dispatch(setCourseAuthors(courseAuthorsNames));
-		//eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [dispatch]);
+	}, [courseAuthorsNames, dispatch]);
 
 	return (
 		course && (
@@ -68,11 +69,7 @@ const CourseInfo = () => {
 					</Title>
 					<FullInfo>
 						<Description>
-							<TextTruncate
-								line={5}
-								truncateText='…'
-								text={course.description}
-							/>
+							<Text>{course.description}</Text>
 						</Description>
 						<Detail>
 							<CourseId id={courseId} />

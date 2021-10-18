@@ -15,6 +15,7 @@ const { Title } = Typography;
 
 const CourseCard = ({ role, authors, coursesList, showCourseHandle }) => {
 	const history = useHistory();
+	const dispatch = useDispatch();
 
 	const extractNames = (course) => {
 		let arrayOfAuthors;
@@ -23,8 +24,6 @@ const CourseCard = ({ role, authors, coursesList, showCourseHandle }) => {
 		);
 		return arrayOfAuthors.filter((el) => !!el);
 	};
-
-	const dispatch = useDispatch();
 
 	const deleteCourseHandle = (id) => {
 		dispatch(deleteCourseThunk(id));
@@ -91,6 +90,7 @@ const CourseCard = ({ role, authors, coursesList, showCourseHandle }) => {
 		</Container>
 	);
 };
+
 CourseCard.propTypes = {
 	role: PropTypes.oneOf(['user', 'admin']),
 	authors: PropTypes.arrayOf(
@@ -119,4 +119,5 @@ CourseCard.propTypes = {
 	]),
 	showCourseHandle: PropTypes.func.isRequired,
 };
+
 export default CourseCard;

@@ -1,13 +1,21 @@
 import React from 'react';
 
 import { Button, PageHeader, Typography } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+import {
+	selectUserName,
+	selectUserRole,
+} from '../../store/selectors/selectors';
 import { logoutThunk } from '../../store/user/thunk';
 import { StyledHeader } from './Header.styled';
 
 function Header() {
+	const name = useSelector(selectUserName);
+	const role = useSelector(selectUserRole);
+
 	const dispatch = useDispatch();
+
 	return (
 		<StyledHeader>
 			<PageHeader
@@ -18,7 +26,7 @@ function Header() {
 				}}
 				extra={
 					<>
-						<Typography>User's Name</Typography>
+						<Typography>{role === 'admin' ? 'ADMIN' : name}</Typography>
 						<Button type='inherit' onClick={() => dispatch(logoutThunk())}>
 							Log Out
 						</Button>

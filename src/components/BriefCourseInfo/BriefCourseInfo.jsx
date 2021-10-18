@@ -30,4 +30,5 @@ BriefCourseInfo.propTypes = {
 		authors: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 	}).isRequired,
 };
+
 export default BriefCourseInfo;
