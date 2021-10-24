@@ -5,7 +5,6 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "antd": "^4.16.13",
     "axios": "^0.22.0",
@@ -35,8 +34,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "test:nowatch": "react-scripts test --watchAll=false",
     "prepare": "husky install",
-    "prepublish": "npm run eslint:fix"
+    "prepublish": "npm run eslint:fix && npm run test:nowatch",
+    "mockrun": "REACT_APP_MOCK=true react-scripts start"
   },
   "eslintConfig": {
     "extends": [
@@ -57,6 +58,8 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/dom": "^8.10.1",
+    "@testing-library/react": "^12.1.2",
     "babel-plugin-styled-components": "^1.13.2",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -68,6 +71,8 @@
     "eslint-plugin-react": "^7.26.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^7.0.2",
-    "prettier": "^2.4.1"
+    "jest": "^26.6.0",
+    "prettier": "^2.4.1",
+    "react-test-renderer": "^17.0.2"
   }
 }

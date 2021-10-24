@@ -21,6 +21,7 @@ function Header() {
 			<PageHeader
 				className='site-page-header'
 				avatar={{
+					alt: 'logo',
 					src: 'https://www.techsoup.org/SiteCollectionImages/Content/courses-icon.svg',
 					size: { xs: 60 },
 				}}

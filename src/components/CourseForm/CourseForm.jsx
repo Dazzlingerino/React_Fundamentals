@@ -100,6 +100,7 @@ const CourseForm = ({ mode }) => {
 			<Header />
 			{mode === 'add' ? (
 				<Form
+					data-testid='addCourseForm'
 					form={addForm}
 					name='addCourse'
 					labelCol={{ span: 8 }}

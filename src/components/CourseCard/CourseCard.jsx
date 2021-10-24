@@ -30,13 +30,19 @@ const CourseCard = ({ role, authors, coursesList, showCourseHandle }) => {
 	};
 
 	return (
-		<Container>
+		<Container data-testid='courseCardContainer'>
 			{coursesList?.map((course) => {
 				const authors = extractNames(course);
 				return (
-					<section key={course.id} className='course-card'>
+					<section
+						key={course.id}
+						className='course-card'
+						data-testid='courseCard'
+					>
 						<div className='title-and-description'>
-							<Title level={4}>{course.title}</Title>
+							<Title level={4} role='title'>
+								{course.title}
+							</Title>
 							<TextTruncate
 								line={5}
 								truncateText='…'
@@ -45,6 +51,7 @@ const CourseCard = ({ role, authors, coursesList, showCourseHandle }) => {
 						</div>
 						<div className='course-brief-info'>
 							<BriefCourseInfo
+								data-testid='hey'
 								authors={authors ? authors : []}
 								course={course}
 							/>

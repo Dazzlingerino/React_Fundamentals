@@ -2,7 +2,7 @@ import * as actions from './actionTypes';
 
 export const userInitialState = {
 	isAuth: false,
-	name: '',
+	name: 'Test Name',
 	email: '',
 	token: '',
 };

@@ -27,7 +27,7 @@ export const BriefAuthors = ({ authors }) => {
 		<ContainerBrief>
 			<Typography>
 				<b>Authors:</b>
-				{truncate(' ' + authors.map((a) => a.trim()).join(', '))}
+				<span data-testid='authors'>{truncate(' ' + authors.join(', '))}</span>
 			</Typography>
 		</ContainerBrief>
 	);
@@ -37,7 +37,10 @@ export const CreationDate = ({ creationDate }) => {
 	return (
 		<Typography>
 			<b>Created:</b>{' '}
-			{creationDate && moment(creationDate, 'DD/MM/YYYY').format('DD.MM.YYYY')}
+			<span data-testid='creationDate'>
+				{creationDate &&
+					moment(creationDate, 'DD/MM/YYYY').format('DD.MM.YYYY')}
+			</span>
 		</Typography>
 	);
 };
@@ -54,7 +57,8 @@ export const CourseId = ({ id }) => {
 export const Duration = ({ duration }) => {
 	return (
 		<Typography>
-			<b>Duration:</b> {getTimeFromMin(duration)} hours
+			<b>Duration:</b>{' '}
+			<span data-testid='duration'>{getTimeFromMin(duration)} hours</span>
 		</Typography>
 	);
 };

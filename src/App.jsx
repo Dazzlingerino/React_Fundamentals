@@ -15,6 +15,7 @@ import ErrorDialog from './components/ErrorDialog/ErrorDialog';
 import Login from './components/Login/Login';
 import PrivateRoute from './components/PrivateRouter/PrivateRouter';
 import Registration from './components/Registration/Registration';
+import { mockedCoursesList } from './constants/constants';
 import { clearAppError } from './store/app/actionCreators';
 import { selectAppError } from './store/selectors/selectors';
 import useToken from './utils/customHooks/useToken';
@@ -67,3 +68,27 @@ const App = () => {
 };
 
 export default App;
+
+export const MOCK_STATE = {
+	app: { appError: null },
+	authors: {
+		authors: [],
+		courseAuthors: [],
+		isSaveLoading: false,
+	},
+	courses: {
+		courses: mockedCoursesList,
+		course: null,
+		isCoursesLoading: false,
+		isEditLoading: false,
+		isSaveLoading: false,
+		isDeleteLoading: false,
+	},
+	user: {
+		isAuth: false,
+		name: '',
+		email: '',
+		token: '',
+		role: 'admin',
+	},
+};
