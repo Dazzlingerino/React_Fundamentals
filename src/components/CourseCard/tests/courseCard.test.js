@@ -28,7 +28,7 @@ const mockedStore = {
 };
 
 describe('CourseCard component', () => {
-	test('CourseCard should display title', () => {
+	beforeEach(() => {
 		render(
 			<Provider store={mockedStore}>
 				<CourseCard
@@ -38,6 +38,9 @@ describe('CourseCard component', () => {
 				/>
 			</Provider>
 		);
+	});
+
+	test('CourseCard should display title', () => {
 		const courseTitleArray = screen.getAllByRole('title');
 
 		expect(courseTitleArray.length).toEqual(2);
@@ -46,15 +49,6 @@ describe('CourseCard component', () => {
 	});
 
 	test('CourseCard should display description', () => {
-		render(
-			<Provider store={mockedStore}>
-				<CourseCard
-					coursesList={mockedState.courses}
-					authors={mockedState.authors}
-					showCourseHandle={mockShowCourseHandle}
-				/>
-			</Provider>
-		);
 		const courseDescriptionArray = screen.getAllByTestId('description');
 
 		expect(courseDescriptionArray.length).toEqual(2);
@@ -63,15 +57,6 @@ describe('CourseCard component', () => {
 	});
 
 	test('CourseCard should display duration in the correct format', () => {
-		render(
-			<Provider store={mockedStore}>
-				<CourseCard
-					coursesList={mockedState.courses}
-					authors={mockedState.authors}
-					showCourseHandle={mockShowCourseHandle}
-				/>
-			</Provider>
-		);
 		const courseDurationArray = screen.getAllByTestId('duration');
 
 		expect(courseDurationArray.length).toEqual(2);
@@ -80,15 +65,6 @@ describe('CourseCard component', () => {
 	});
 
 	test('CourseCard should display authors list', () => {
-		render(
-			<Provider store={mockedStore}>
-				<CourseCard
-					coursesList={mockedState.courses}
-					authors={mockedState.authors}
-					showCourseHandle={mockShowCourseHandle}
-				/>
-			</Provider>
-		);
 		const courseAuthorsArray = screen.getAllByTestId('authors');
 
 		expect(courseAuthorsArray.length).toEqual(2);
@@ -101,15 +77,6 @@ describe('CourseCard component', () => {
 	});
 
 	test('CourseCard should display created date in the correct format', () => {
-		render(
-			<Provider store={mockedStore}>
-				<CourseCard
-					coursesList={mockedState.courses}
-					authors={mockedState.authors}
-					showCourseHandle={mockShowCourseHandle}
-				/>
-			</Provider>
-		);
 		const courseCreationDateArray = screen.getAllByTestId('creationDate');
 
 		expect(courseCreationDateArray.length).toEqual(2);

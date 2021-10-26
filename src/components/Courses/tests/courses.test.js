@@ -60,15 +60,14 @@ const reduxHooksMocker = (testId) => {
 	ReactRedux.useDispatch.mockReturnValue(mockedDispatch);
 };
 
-beforeAll(() => {
-	ReactRedux.useDispatch = jest.fn().mockImplementation(() => mockDispatch);
-});
-
-beforeEach(() => {
-	ReactRedux.useDispatch.mockClear();
-});
-
 describe('Courses component', () => {
+	beforeAll(() => {
+		ReactRedux.useDispatch = jest.fn().mockImplementation(() => mockDispatch);
+	});
+
+	beforeEach(() => {
+		ReactRedux.useDispatch.mockClear();
+	});
 	test('Courses should display amount of CoursesCard equal length of courses array', () => {
 		reduxHooksMocker('default');
 		render(

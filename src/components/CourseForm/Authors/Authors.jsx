@@ -110,10 +110,12 @@ const Authors = ({ mode, form, courseAuthorsNames }) => {
 					ref={inputEl}
 					className='author-input'
 					placeholder='Enter author name...'
+					aria-label='author-input'
 					onChange={inputHandle}
 					value={name}
 				/>
 				<Button
+					data-testid='createAuthorBtn'
 					className='create-author-button'
 					disabled={isDisabled}
 					onClick={createAuthorHandle}
@@ -127,12 +129,16 @@ const Authors = ({ mode, form, courseAuthorsNames }) => {
 					authorsList?.map((author, index) => {
 						return (
 							<AuthorContainer
+								data-testid='authorsList'
 								key={`${author.id + index.toString()}`}
 								className='author-name-and-button'
 							>
 								<Typography>{author?.name}</Typography>
 								{author.name && (
-									<Button onClick={() => addAuthorHandle(author)}>
+									<Button
+										data-testid='addAuthorBtn'
+										onClick={() => addAuthorHandle(author)}
+									>
 										Add author
 									</Button>
 								)}
@@ -170,8 +176,13 @@ const Authors = ({ mode, form, courseAuthorsNames }) => {
 							locale={{ emptyText: ' ' }}
 							renderItem={(item) => (
 								<TitleAndButton>
-									<List.Item key={item.id}>{item.name}</List.Item>
-									<Button onClick={() => deleteAuthorHandle(item)}>
+									<List.Item data-testid='courseAuthorsList' key={item.id}>
+										{item.name}
+									</List.Item>
+									<Button
+										data-testid='deleteAuthorBtn'
+										onClick={() => deleteAuthorHandle(item)}
+									>
 										Delete author
 									</Button>
 								</TitleAndButton>

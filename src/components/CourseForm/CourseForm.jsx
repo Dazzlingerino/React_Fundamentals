@@ -162,9 +162,9 @@ const CourseForm = ({ mode }) => {
 					</Container>
 				</Form>
 			) : (
-				mode === 'update' &&
-				course && (
+				mode === 'update' && (
 					<Form
+						data-testid='updateCourseForm'
 						form={updateForm}
 						name='updateCourse'
 						labelCol={{ span: 8 }}
@@ -226,7 +226,7 @@ const CourseForm = ({ mode }) => {
 								form={updateForm}
 								courseAuthorsNames={courseAuthorsNames}
 							/>
-							<Duration mode={mode} initialDuration={course.duration} />
+							<Duration mode={mode} initialDuration={course?.duration} />
 						</Container>
 					</Form>
 				)

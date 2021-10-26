@@ -18,21 +18,19 @@ const mockedStore = {
 };
 
 describe('Header component', () => {
-	test("header has user's name", () => {
+	beforeEach(() => {
 		render(
 			<Provider store={mockedStore}>
 				<Header />
 			</Provider>
 		);
+	});
+
+	test("header has user's name", () => {
 		expect(screen.queryByText('Test Name')).toBeInTheDocument();
 	});
 
 	test('header has logo', () => {
-		const { getByAltText } = render(
-			<Provider store={mockedStore}>
-				<Header />
-			</Provider>
-		);
-		getByAltText('logo');
+		expect(screen.getByAltText('logo')).toBeInTheDocument();
 	});
 });

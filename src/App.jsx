@@ -15,7 +15,7 @@ import ErrorDialog from './components/ErrorDialog/ErrorDialog';
 import Login from './components/Login/Login';
 import PrivateRoute from './components/PrivateRouter/PrivateRouter';
 import Registration from './components/Registration/Registration';
-import { mockedCoursesList } from './constants/constants';
+import { mockedAuthorsList, mockedCoursesList } from './constants/constants';
 import { clearAppError } from './store/app/actionCreators';
 import { selectAppError } from './store/selectors/selectors';
 import useToken from './utils/customHooks/useToken';
@@ -72,8 +72,17 @@ export default App;
 export const MOCK_STATE = {
 	app: { appError: null },
 	authors: {
-		authors: [],
-		courseAuthors: [],
+		authors: mockedAuthorsList,
+		courseAuthors: [
+			{
+				id: '27cc3006-e93a-4748-8ca8-73d06aa93b6d',
+				name: 'Vasiliy Dobkin',
+			},
+			{
+				id: 'f762978b-61eb4096-812b-ebde22838167',
+				name: 'Nicolas Kim',
+			},
+		],
 		isSaveLoading: false,
 	},
 	courses: {
